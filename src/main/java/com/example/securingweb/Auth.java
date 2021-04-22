@@ -12,9 +12,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Auth implements AuthenticationProvider{
-    @Autowired private UDetService userDetailsService; 
-    @Autowired private PasswordEncoder passwordEncoder; 
-    @Autowired private UserRepository userrepo; 
+    private UDetService userDetailsService;
+    private PasswordEncoder passwordEncoder;
+    private UserRepository userrepo;
+
+    @Autowired
+    public Auth(UDetService userDetailsService, PasswordEncoder passwordEncoder, UserRepository userrepo){
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.userrepo = userrepo;
+    }
 
     public Authentication authenticate(Authentication authentication) 
    throws AuthenticationException { 

@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UDetService implements UserDetailsService{
-    @Autowired
     private UserRepository userrepo;
+
+    @Autowired
+    public UDetService(UserRepository userrepo){
+        this.userrepo = userrepo;
+    }
 
     private Optional<User> findUserByUserName(String username){
         User u = null;
