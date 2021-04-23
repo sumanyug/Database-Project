@@ -11,8 +11,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.*;
+
 @RestController
-@CrossOrigin
+@CrossOrigin(origins= "http://localhost:3000")
+@RequestMapping("/api/auth/")
 public class JWTAuthenticationController {
 
     final private AuthenticationManager authMan;

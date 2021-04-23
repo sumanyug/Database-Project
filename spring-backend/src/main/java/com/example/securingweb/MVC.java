@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.MediaType; 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins= "http://localhost:3000")
+@RequestMapping("/api/user/")
 public class MVC{
     private UDetService det;
     private PasswordEncoder passwordEncoder;

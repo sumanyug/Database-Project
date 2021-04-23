@@ -7,15 +7,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException; 
 import org.springframework.security.provisioning.UserDetailsManager; 
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Service
 public class UDetService implements UserDetailsService{
+    @Autowired
     private UserRepository userrepo;
 
     @Autowired
+    private PasswordEncoder brcyptEncoder;
+
+    /*@Autowired
     public UDetService(UserRepository userrepo){
         this.userrepo = userrepo;
-    }
+    }*/
 
     private Optional<User> findUserByUserName(String username){
         User u = null;
@@ -39,6 +45,7 @@ public class UDetService implements UserDetailsService{
     }
 
     public void createUser(User user) { 
+        user.setPassword(brcyptEncoder.encode(user.getPassword()));
         userrepo.save((User) user); 
     } 
 }
