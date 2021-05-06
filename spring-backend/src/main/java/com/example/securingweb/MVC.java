@@ -73,6 +73,11 @@ public class MVC{
         return response;
     }
 
+    @PostMapping("/addfriend")
+    public Map<String, Object> addFriend(@RequestParam String username){
+        return usert.addFriend(username);
+    }
+
 //    @GetMapping("/")
 //    public String index() {
 //        return "index";
