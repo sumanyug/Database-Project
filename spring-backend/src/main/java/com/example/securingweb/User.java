@@ -22,14 +22,14 @@ public class User  implements UserDetails{
     private String name;
 
     @Relationship(type="Request", direction= Relationship.Direction.OUTGOING)
-    List<User> requests;
+    Set<User> requests;
 
-    @Relationship(type="Friends", direction= Relationship.Direction.OUTGOING)
-    List<User> friends;
+    @Relationship(type="Friend", direction= Relationship.Direction.OUTGOING)
+    Set<User> friends;
 
 
 
-    public User(String username, String password, String name, List<User> requests, List<User> friends){
+    public User(String username, String password, String name, Set<User> requests, Set<User> friends){
         this.username = username;
         if( this.username == null) this.username = "";
         this.password = password;
@@ -37,9 +37,9 @@ public class User  implements UserDetails{
         this.name = name;
         if( this.name == null) this.name = "";
         this.requests = requests;
-        if( this.requests == null) this.requests = new LinkedList<>();
+        if( this.requests == null) this.requests = new HashSet<>();
         this.friends = friends;
-        if( this.friends == null) this.friends = new LinkedList<>();
+        if( this.friends == null) this.friends = new HashSet<>();
     }
     
     @Override
@@ -115,13 +115,22 @@ public class User  implements UserDetails{
 
     }
 
-    public List<User> getFriends(){
+    public Set<User> getFriends(){
         return friends;
     }
 
-    public List<User> getRequests(){
+    public Set<User> getRequests(){
         return requests;
     }
+
+    public void removeRequest(User user){
+        requests.remove(user);
+    }
+    public void removeFriend(User user){
+        friends.remove(user);
+    }
+
+
 
 
 

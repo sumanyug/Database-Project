@@ -77,6 +77,32 @@ public class MVC{
     public Map<String, Object> addFriend(@RequestParam String username){
         return usert.addFriend(username);
     }
+    @PostMapping("/addrequest")
+    public Map<String, Object> addRequest(@RequestParam String username){
+        return usert.addRequest(username);
+
+    }
+
+    @PostMapping("/removerequest") // To delete a sent request
+    public Map<String, Object> removeRequest(@RequestParam String username){
+        return usert.deleteRequest(username);
+
+    }
+
+    @PostMapping("/deleterequest") // To delete a received request
+    public Map<String, Object> deleteRequest(@RequestParam String username){
+        return usert.deleteRequest(username);
+
+    }
+
+    @PostMapping("/deletefriend") // To delete a received request
+    public Map<String, Object> deleteFriend(@RequestParam String username) {
+        return usert.deleteFriend(username);
+    }
+
+
+
+
 
 //    @GetMapping("/")
 //    public String index() {
