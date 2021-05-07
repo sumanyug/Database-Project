@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.card-container.card {
+  max-width: 350px !important;
+  padding: 40px 40px;
+  margin:auto;
+  top: 50%;
+  margin-top:70px;
+}
+
+.center-text{
+  text-align:center;
+}
+
+.submit-div{
+  text-align:center;
+}

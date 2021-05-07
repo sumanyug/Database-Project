@@ -32,6 +32,12 @@ public class MVC{
         return "Hello World!";
     }
 
+    @PostMapping("/getstarted")
+    public String getStarted(@RequestBody Map <String, Object> data){
+        System.out.println(data);
+        return "started";
+    }
+
 //    @GetMapping("/")
 //    public String index() {
 //        return "index";
