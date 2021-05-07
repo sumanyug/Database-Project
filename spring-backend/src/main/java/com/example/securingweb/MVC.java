@@ -20,6 +20,7 @@ public class MVC {
     private UDetService det;
     private PasswordEncoder passwordEncoder;
     private MovieRepository movierepo;
+    private GenreRepository genrerepo;
 
 
     private UserRepository userrep;
@@ -27,12 +28,13 @@ public class MVC {
 
 
     @Autowired
-    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert, MovieRepository movierepo){
+    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert, MovieRepository movierepo, GenreRepository genrerepo){
         this.det = det;
         this.passwordEncoder = passwordEncoder;
         this.userrep = userrep;
         this.usert = usert;
         this.movierepo = movierepo;
+        this.genrerepo = genrerepo;
     }
 
 
@@ -105,7 +107,7 @@ public class MVC {
             movierepo.addMovieRelationship(currentPrincipal.getUsername(), movie_name);
     }
 
-    @PostMapping(path = "/movie", params="moviename")
+    /*@PostMapping(path = "/movie", params="moviename")
     public void editLike(@RequestParam String moviename) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
@@ -115,7 +117,7 @@ public class MVC {
             movierepo.dislike(currentPrincipal.getUsername(), moviename);
         else
             movierepo.like(currentPrincipal.getUsername(), moviename);
-    }
+    }*/
 
     @GetMapping("/admin")
     public String adminPage(){
@@ -164,8 +166,46 @@ public class MVC {
     }
 
     @GetMapping("/bootstrap")
-    public void sendGenres() {
-        
+    public Map<String, List<String> > sendGenres() {
+        Map<String, List<String> > response = new HashMap<>();
+
+        //System.out.println("hi1");
+        List<Genre> Genres = genrerepo.findAllGenres();
+        //System.out.println("hi2");
+
+        for(Genre genre: Genres){
+            String name = genre.getName();
+            //System.out.println(name);
+            List<String> movies = genrerepo.findTop5(name);
+            response.put(name, movies);
+        }
+
+        return response;
+    }
+
+    @PostMapping("/bootstrap")
+    public String receivemovies(@RequestBody Map <String, Object> data){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentPrincipal = (User) authentication.getPrincipal();
+        String username = currentPrincipal.getUsername();
+
+        for (String name : data.keySet()){
+            //System.out.println("key: " + name);
+            // no use of key, just adding for the sake of it.
+        }
+
+        for (Object name : data.values()){
+            for (String movie : (List<String>) name){
+                //System.out.println(movie);
+                if(movierepo.checkIfRatingExists(movie, username))
+                    movierepo.setRating(username, movie, 5.0);
+                else
+                    movierepo.addFeedbackRelationship(username, movie, 5.0);
+            }
+        }
+
+        return "started";
     }
 
 
@@ -265,6 +305,14 @@ public class MVC {
 
         return usersdetails;
     }
+
+    @GetMapping("/myrequests")
+    public List<String> findAllRequests() {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        return userrep.findAllRequests(primaryUser.getUsername());
+    }
+
 
 
 
