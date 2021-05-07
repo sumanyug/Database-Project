@@ -2,9 +2,11 @@ package com.example.securingweb;
 
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Id;
-import java.util.Collection; 
-import java.util.List;
-import java.util.Objects;import org.springframework.security.core.userdetails.UserDetails; 
+
+import java.util.*;
+
+import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority; 
 
 
@@ -19,13 +21,25 @@ public class User  implements UserDetails{
 
     private String name;
 
+    @Relationship(type="Request", direction= Relationship.Direction.OUTGOING)
+    Set<User> requests;
 
-    private User(){}
+    @Relationship(type="Friend", direction= Relationship.Direction.OUTGOING)
+    Set<User> friends;
 
-    public User(String username, String password, String name){
+
+
+    public User(String username, String password, String name, Set<User> requests, Set<User> friends){
         this.username = username;
+        if( this.username == null) this.username = "";
         this.password = password;
+        if( this.password == null) this.password = "";
         this.name = name;
+        if( this.name == null) this.name = "";
+        this.requests = requests;
+        if( this.requests == null) this.requests = new HashSet<>();
+        this.friends = friends;
+        if( this.friends == null) this.friends = new HashSet<>();
     }
     
     @Override
@@ -84,5 +98,40 @@ public class User  implements UserDetails{
                 ", name=" + name +
                 '}';
     }
+    public Map<String,String> toMap(){
+        Map<String, String> userToString  = new HashMap<>();
+        userToString.put("username", username);
+        userToString.put("name", name);
+        return userToString;
+    }
+
+    public void AddFriendRequest(User frequest){
+        requests.add(frequest);
+
+    }
+
+    public void AddFriend(User frequest){
+        friends.add(frequest);
+
+    }
+
+    public Set<User> getFriends(){
+        return friends;
+    }
+
+    public Set<User> getRequests(){
+        return requests;
+    }
+
+    public void removeRequest(User user){
+        requests.remove(user);
+    }
+    public void removeFriend(User user){
+        friends.remove(user);
+    }
+
+
+
+
 
 }
