@@ -330,6 +330,21 @@ public class MVC {
         return userrep.findAllRequests(primaryUser.getUsername());
     }
 
+    @GetMapping("/searchMovie")
+    public List<Map<String, Object>> searchMovie(@RequestParam String searchQuery) {
+        searchQuery = ".*" + searchQuery + ".*";
+        List<Movie> users = movierepo.getMovies(searchQuery);
+
+        Iterator<Movie> it = users.iterator();
+        List<Map<String, Object>> maplist = new ArrayList<>();
+        while(it.hasNext()){
+            Movie mov = it.next();
+            maplist.add(mov.toMap());
+        }
+
+        return maplist;
+    }
+
 
 
 
