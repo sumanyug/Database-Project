@@ -47,5 +47,14 @@ public class UDetService implements UserDetailsService{
     public void createUser(User user) { 
         user.setPassword(brcyptEncoder.encode(user.getPassword()));
         userrepo.save((User) user); 
-    } 
+    }
+    
+    public List<User> getAllUsers(){
+        List<User> Users = userrepo.findAll();
+        System.out.println("Size of the list : "+Users.size());
+        for (User user: Users){
+            System.out.println("From the internals : "+user.getUsername());
+        }
+        return userrepo.findAll();
+    }
 }

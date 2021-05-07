@@ -6,30 +6,30 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 import java.util.Collection; 
 import java.util.List;
-import java.util.Objects;import org.springframework.security.core.userdetails.UserDetails; 
+import java.util.Objects; 
 import org.springframework.security.core.GrantedAuthority; 
 
 
 
-@Node ("User")
-public class User  implements UserDetails{
+@Node ("Movie")
+public class Movie {
 
     @Id
-    private String username;
+    private String movieid;
 
-    private String password;
+    private double rating;
 
     private String name;
 
-    private User(){}
+    private Movie(){}
 
-    public User(String username, String password, String name){
-        this.username = username;
-        this.password = password;
+    public Movie(String movieid, double rating, String name){
+        this.rating = rating;
         this.name = name;
+        this.movieid = movieid;
     }
     
-    @Override
+    /*@Override
     public Collection<GrantedAuthority> getAuthorities() { 
         return List.of(() -> "read"); 
     }
@@ -47,42 +47,41 @@ public class User  implements UserDetails{
     } 
     @Override public boolean isEnabled() { 
     return true; 
-    }
+    }*/
 
     public String getName(){
         return name;
     }
 
-    @Override
-    public String getUsername(){
-        return username;
+    public double getRating(){
+        return rating;
     }
 
-    @Override
-    public String getPassword(){
+    /*@Override
+   public String getPassword(){
         return password;
-    }
+    } 
 
     public void setPassword(String password){
         this.password = password;
-    }
+    }*/
 
 
     @Override
     public boolean equals(Object o){
         if(this == o) return true;
-        if(!(o instanceof User)) return false;
+        if(!(o instanceof Movie)) return false;
 
-        User user = (User) o;
+        Movie movie = (Movie) o;
 
-        return username.equals(user.username) && password.equals(user.password);
+        return name.equals(movie.name) && rating==movie.rating && movieid.equals(movie.movieid);
     }
 
     public String toString() {
-        return "User{" +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", name=" + name +
+        return "Movie{" +
+                ", movieid='" + movieid + '\'' +
+                ", name='" + name + '\'' +
+                ", rating=" + rating +
                 '}';
     }
 
