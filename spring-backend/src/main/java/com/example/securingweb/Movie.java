@@ -5,10 +5,10 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
-import java.util.Collection; 
-import java.util.List;
-import java.util.Objects; 
-import org.springframework.security.core.GrantedAuthority; 
+
+import java.util.*;
+
+import org.springframework.security.core.GrantedAuthority;
 
 
 
@@ -86,6 +86,14 @@ public class Movie {
         return "Movie{" +
                 ", name='" + name +
                 '}';
+    }
+    public Map<String, Object> toMap(){
+        Map<String, Object> map= new HashMap<>();
+        map.put("movieid", movieid);
+        map.put("name", name);
+        map.put("averageRating", rating);
+
+        return map;
     }
 
 }

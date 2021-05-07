@@ -39,6 +39,9 @@ public interface MovieRepository extends Neo4jRepository <Movie, Long>{
     @Query("MATCH (m:Movie {movieid: $movieid})<-[r:HAS_RATED]-(u:User) RETURN coalesce(avg(r.rating),0.0)")
     double getAvgRating(long movieid);
 
+    @Query("MATCH (m:Movie) where m.name =~ $movienameregex return m")
+    List<Movie> getMovies(String movienameregex);
+
     //@Query("MATCH (n:Movie)<-[r:LIKED]-(u:User) WHERE n.name = $moviename and u.username = $username DELETE r")
     //void dislike(String username, String moviename);
 
