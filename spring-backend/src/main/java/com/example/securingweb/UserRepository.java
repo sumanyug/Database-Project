@@ -59,6 +59,6 @@ public interface UserRepository extends Neo4jRepository <User, String>{
             "return u")
     List<User> searchPerson(String searchQuery);
 
-
-
+    @Query("MATCH (n:User) where n.username = $username SET n.age = $age SET n.gender = $gender SET n.occupation = $occupation")
+    void setProperties(String username, int age, String gender, String occupation);
 }

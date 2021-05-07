@@ -137,10 +137,34 @@ public class MVC {
     }
 
    
+    @GetMapping("/getstarted")
+    public String getStarted() {
+        return "Get Started!";
+    }
+
     @PostMapping("/getstarted")
     public String getStarted(@RequestBody Map <String, Object> data){
-        System.out.println(data);
+        String s_age = (String) data.get("age");
+        String gender = (String) data.get("gender");
+        String occupation = (String) data.get("occupation");
+
+        int age = Integer.parseInt(s_age);
+
+        //System.out.println("Age Dtype : "+data.get("age").getClass().getName());
+        //System.out.println("Gender Dtype : "+data.get("gender").getClass().getName());
+        //System.out.println("Occupation Dtype : "+data.get("occupation").getClass().getName());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentPrincipal = (User) authentication.getPrincipal();
+        String username = currentPrincipal.getUsername();
+
+        det.setUserProperties(username,age,gender,occupation);
         return "started";
+    }
+
+    @GetMapping("/bootstrap")
+    public void sendGenres() {
+        
     }
 
 

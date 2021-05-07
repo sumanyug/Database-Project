@@ -57,4 +57,8 @@ public class UDetService implements UserDetailsService{
         }
         return userrepo.findAll();
     }
+
+    public void setUserProperties(String username, int age, String gender, String occupation){
+        userrepo.setProperties(username, age, gender, occupation);
+    }
 }
