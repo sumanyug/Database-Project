@@ -19,6 +19,7 @@ export default class MyNavbar extends Component {
                 <Nav className="mr-auto">
                 <Nav.Link href="/hello">Home</Nav.Link>
                 <Nav.Link href="/friends">Friends</Nav.Link>
+                <Nav.Link href="/logout">Logout</Nav.Link>
                 {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown"> */}
                     {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
                     {/* <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item> */}

@@ -9,6 +9,7 @@ import Hello from "./components/hello.component";
 import GetStarted from "./components/get-started.component"
 import Friends from "./components/friends.component";
 import Person from "./components/person.component";
+import Logout from "./components/logout.component";
 
 class App extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class App extends Component {
           <Route exact path="/hello" component={Hello} />
           <Route exact path="/getstarted" component={GetStarted} />
           <Route exact path="/friends" component={Friends} />
+          <Route exact path="/logout" component={Logout} />
           <Route path = "/person/:id" component={Person} />
         </Switch>
       </div>

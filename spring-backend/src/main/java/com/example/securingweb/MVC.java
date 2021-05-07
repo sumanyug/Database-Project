@@ -234,6 +234,8 @@ public class MVC {
                 personFound.toString();
 
                 state = usert.personStatus(primaryUser.getUsername(), personFound.getUsername());
+                System.out.println("Status of rohan");
+                System.out.println(state);
                 response.putAll(personFound.toMap());
                 response.put("state", state);
             }
@@ -251,6 +253,8 @@ public class MVC {
     }
     @PostMapping("/addrequest")
     public Map<String, Object> addRequest(@RequestParam String username){
+        System.out.println("REQUEST SENT TO");
+        System.out.println(username);
         return usert.addRequest(username);
 
     }
@@ -263,6 +267,7 @@ public class MVC {
 
     @PostMapping("/deleterequest") // To delete a received request
     public Map<String, Object> deleteRequest(@RequestParam String username){
+        System.out.println("DELETING REQUEST");
         return usert.deleteRequest(username);
 
     }

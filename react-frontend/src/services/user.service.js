@@ -24,6 +24,52 @@ class UserService {
             params: { username: username } 
         });
     }
+    sendRequest(username){
+        console.log(username);
+        return axios.post(API_URL + 'addrequest?username=' + username,
+        {},
+         { headers: authHeader() }
+        )
+        .then(
+
+        );
+    }
+    acceptRequest(username){
+        return axios.post(API_URL + 'addfriend?username=' + username,
+        {},
+        { headers: authHeader() }
+        )
+        .then(
+
+        );
+    }
+    rejectRequest(username){
+        return axios.post(API_URL + 'removerequest?username=' + username,
+        {},
+        { headers: authHeader() }
+        )
+        .then(
+
+        );
+    }
+    deleteRequest(username){
+        return axios.post(API_URL + 'deleterequest?username=' + username,
+        {},
+        { headers: authHeader() }
+        )
+        .then(
+
+        );
+    }
+    removeFriend(username){
+        return axios.post(API_URL + 'deletefriend?username=' + username,
+        {},
+        { headers: authHeader() }
+        )
+        .then(
+
+        );
+    }
 }
 
 export default new UserService();

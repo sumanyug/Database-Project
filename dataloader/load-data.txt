@@ -1,10 +1,8 @@
-CREATE DATABASE myproject
-CREATE CONSTRAINT  ON (u:User) ASSERT u.id IS UNIQUE;
-CREATE CONSTRAINT  ON (m:Movie) ASSERT m.id IS UNIQUE;
-
+CREATE CONSTRAINT  ON (m:Movie) ASSERT m.movieid IS UNIQUE;
+CREATE CONSTRAINT ON (u:User) ASSERT u.username IS UNIQUE;
 CREATE CONSTRAINT  ON (g: Genre) ASSERT g.id is UNIQUE;
 
-LOAD CSV WITH HEADERS FROM 'file:///u.user' AS line FIELDTERMINATOR '|' MERGE (u:User {id:toInteger(line.UserID)}) ON CREATE SET u.age = toInteger(line.Age), u.gender = line.Gender, u.occupation = line.occupation, u.zipcode = toInteger(line.ZipCode);
+LOAD CSV WITH HEADERS FROM 'file:///u.user' AS line FIELDTERMINATOR '|' MERGE (u:User{username:line.UserID}) ON CREATE SET u.age = toInteger(line.Age), u.gender = line.Gender, u.occupation = line.occupation, u.zipcode = toInteger(line.ZipCode), u.name="dataloadernodes";
 
 
 LOAD CSV WITH HEADERS FROM 'file:///u.genre' AS line FIELDTERMINATOR '|' MERGE (g:Genre {id:toInteger(line.GenreID)}) ON CREATE SET g.name = line.GenreName;
@@ -14,7 +12,7 @@ LOAD CSV WITH HEADERS
 FROM 'file:///u.item'
 AS line
 FIELDTERMINATOR '|'
-MERGE (m:Movie {id:toInteger(line.MovieId)})
+MERGE (m:Movie {movieid:toInteger(line.MovieId)})
 ON CREATE SET
 m.title = line.MovieTitle,
 m.imdburl = line.IMDbURL;
@@ -23,7 +21,7 @@ LOAD CSV WITH HEADERS
 FROM 'file:///u.item'
 AS line
 FIELDTERMINATOR '|'
-MATCH (movie:Movie {id:toInteger(line.MovieId)})
+MATCH (movie:Movie {movieid:toInteger(line.MovieId)})
 MATCH (adv: Genre {name: "Adventure"})
 MATCH (act: Genre {name: "Action"})
 MATCH (child: Genre {name: "Children's"})
@@ -85,8 +83,8 @@ LOAD CSV WITH HEADERS
 FROM 'file:///u.data'
 AS line
 FIELDTERMINATOR ' '
-MATCH (movie:Movie {id:toInteger(line.movieID)})
-MATCH (user:User {id:toInteger(line.userID)})
+MATCH (movie:Movie {movieid:toInteger(line.movieID)})
+MATCH (user:User {username:line.userID})
 MERGE (user)-[r:RATED]->(movie)
 ON CREATE SET
 r.rating = toInteger(line.rating),
@@ -96,8 +94,8 @@ r.timestamp = toInteger(line.timestamp);
 LOAD CSV WITH HEADERS
 FROM 'file:///network.csv'
 AS line
-MATCH (user1:User {id:toInteger(line.user1)})
-MATCH (user2:User {id:toInteger(line.user2)})
+MATCH (user1:User {username:line.user1})
+MATCH (user2:User {username:line.user2})
 MERGE (user1)-[:FRIENDS_WITH]->(user2);
 
 
