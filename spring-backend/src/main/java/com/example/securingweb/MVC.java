@@ -85,7 +85,7 @@ public class MVC{
 
     @PostMapping("/removerequest") // To delete a sent request
     public Map<String, Object> removeRequest(@RequestParam String username){
-        return usert.deleteRequest(username);
+        return usert.rejectRequest(username);
 
     }
 

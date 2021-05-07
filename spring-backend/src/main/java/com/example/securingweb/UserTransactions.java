@@ -49,7 +49,9 @@ public class UserTransactions {
                 String username2 = personFound.getUsername();
                 if (userRepository.checkRequest(username2, username1) != null &&
                 userRepository.checkFriend(username1, username2) == null) {
-                    userRepository.addFriend(username1, username2);
+                    primaryUser.AddFriend(personFound);
+                    userRepository.deleteFriendRequest(username2, username1);
+                    userRepository.save(primaryUser);
                     added = true;
                 }
                 response.putAll(personFound.toMap());
@@ -161,13 +163,12 @@ public class UserTransactions {
         else{
             if(userList.size() == 1){
                 User personFound = userList.get(0);
-                boolean removed = false;
+                boolean removed = true;
                 String username1 = primaryUser.getUsername();
                 String username2 = personFound.getUsername();
                 userRepository.deleteFriend(username1, username2);
-                userRepository.save(primaryUser);
                 response.putAll(personFound.toMap());
-                response.put("removed", true);
+                response.put("removed", removed);
             }
             else {
                 response.put("error", "Too many such person exists, big error in DB");
