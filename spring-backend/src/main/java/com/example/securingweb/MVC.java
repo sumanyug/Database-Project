@@ -163,7 +163,7 @@ public class MVC {
 
     @PostMapping("/getstarted")
     public String getStarted(@RequestBody Map <String, Object> data){
-        String s_age = (String) data.get("age");
+        String s_age = String.valueOf(data.get("age"));
         String gender = (String) data.get("gender");
         String occupation = (String) data.get("occupation");
 
@@ -322,6 +322,14 @@ public class MVC {
 
         return usersdetails;
     }
+
+    @GetMapping("/myrequests")
+    public List<String> findAllRequests() {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        return userrep.findAllRequests(primaryUser.getUsername());
+    }
+
 
 
 

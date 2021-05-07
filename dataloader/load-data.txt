@@ -15,7 +15,8 @@ FIELDTERMINATOR '|'
 MERGE (m:Movie {movieid:toInteger(line.MovieId)})
 ON CREATE SET
 m.title = line.MovieTitle,
-m.imdburl = line.IMDbURL;
+m.imdburl = line.IMDbURL.
+m.rating = 0.0;
 
 LOAD CSV WITH HEADERS
 FROM 'file:///u.item'

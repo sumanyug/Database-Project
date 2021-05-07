@@ -5,7 +5,7 @@ LOAD CSV WITH HEADERS
 FROM 'file:///director_movie.csv'
 AS line
 MATCH (p:MoviePerson {id:toInteger(line.directorID)})
-MATCH (m:Movie {id:toInteger(line.movieID)})
+MATCH (m:Movie {movieid:toInteger(line.movieID)})
 MERGE (p1)-[:ROLE_DIRECTOR]->(m);
 
 :auto USING PERIODIC COMMIT 100
@@ -13,5 +13,5 @@ LOAD CSV WITH HEADERS
 FROM 'file:///actor_movie.csv'
 AS line
 MATCH (p:MoviePerson {id:toInteger(line.actorID)})
-MATCH (m:Movie {id:toInteger(line.movieID)})
+MATCH (m:Movie {movieid:toInteger(line.movieID)})
 MERGE (p1)-[:ROLE_ACTOR]->(m)
