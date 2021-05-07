@@ -34,19 +34,27 @@ public class MovieRecommendationController {
         this.database = database;
     }
 
-    @RequestMapping("/home/{id}")
+    @RequestMapping("/home/{username}")
     @ResponseBody
-    public List<RecommendationVO> recommend(@PathVariable String id, @RequestParam(defaultValue = "10") int limit) {
+    public List<RecommendationVO> recommend(@PathVariable String username, @RequestParam(defaultValue = "10") int limit) {
         try (Transaction tx = database.beginTx()) {
-            return convert(home_engine.recommend(findByID(id), new SimpleConfig(limit)));
+            return convert(home_engine.recommend(findByUsername(username), new SimpleConfig(limit)));
+        }
+    }
+    @RequestMapping("/home/{username}/trending")
+    @ResponseBody
+    public List<RecommendationVO> recommend_trending(@PathVariable String username, @RequestParam(defaultValue = "10") int limit) {
+        try (Transaction tx = database.beginTx()) {
+            return convert(home_engine.recommend(findByUsername(username), new SimpleConfig(limit)));
         }
     }
 
-    @RequestMapping("/home/{id}/movie/{movie_id}")
+
+    @RequestMapping("/home/{username}/movie/{movie_id}")
     @ResponseBody
-    public List<RecommendationVO> recommend_movie(@PathVariable String id,@PathVariable String movie_id, @RequestParam(defaultValue = "10") int limit) {
+    public List<RecommendationVO> recommend_movie(@PathVariable String username,@PathVariable String movie_id, @RequestParam(defaultValue = "10") int limit) {
         try (Transaction tx = database.beginTx()) {
-            return convert(engine.recommend( findByID(id), new SimpleConfig(limit)));
+            return convert(engine.recommend( findByUsername(username), new SimpleConfig(limit)));
         }
     }
 
@@ -56,10 +64,8 @@ public class MovieRecommendationController {
         return getSingle(database.findNodes(Label.label("Movie"), "id", int_id), "Movie with id " + id + " does not exist.");
     }
 
-    private Node findByID(String id) {
-        System.out.println(id);
-        int int_id = Integer.parseInt(id);
-        return getSingle(database.findNodes(Label.label("User"), "id", int_id), "Person with id " + id + " does not exist.");
+    private Node findByUsername(String username) {
+        return getSingle(database.findNodes(Label.label("User"), "username", username), "Person with username " + username + " does not exist.");
     }
 
     private List<RecommendationVO> convert(List<Recommendation<Node>> recommendations) {
