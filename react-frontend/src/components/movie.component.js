@@ -1,0 +1,40 @@
+import React, { Component } from "react";
+
+import UserService from "../services/user.service";
+import AuthService from "../services/auth.service";
+
+import MyNavbar from "./navbar.component";
+
+export default class Movie extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            currentUser: AuthService.getCurrentUser()
+        }
+        if(!this.state.currentUser){
+            this.props.history.push('/login');
+        }
+    }
+
+    componentDidMount() {
+        const { match: { params }} = this.props;
+
+        UserService.getMovie(params.id).then(
+            response => {
+                console.log(response);
+            },
+            error => {
+                console.log(error);
+            }
+        );
+    }
+    
+    render() {
+        return (
+            <div>
+                < MyNavbar />
+            </div>
+        )
+    }
+}
