@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
 
 import UserService from "../services/user.service";
 import MyNavbar from "./navbar.component";
+import Button from 'react-bootstrap/Button'
 
 function SendRequest(props) {
     return (
-        <div>
-            Friend Request
+        <div className="center-text">
+            <Button onClick={() => props.onClick()}>Add Friend</Button>
         </div>
     )
 }
@@ -15,23 +15,26 @@ function SendRequest(props) {
 function Requested(props) {
     return (
         <div className="center-text">
-            Friend Request Sent
+            Friend Request Sent <br />
+            <Button onClick={() => props.onDelete()}> Delete Request</Button>
         </div>
     )
 }
 
 function Received(props) {
     return (
-        <div>
-            Friend request received
+        <div className="center-text">
+            <Button onClick={() => props.onAccept()}> Accept Request</Button> <br />
+            <Button onClick={() => props.onReject()}> Reject Request</Button>
         </div>
     )
 }
 
 function Friends(props) {
     return (
-        <div>
-            Already Friends
+        <div className="center-text">
+            Already Friends <br />
+            <Button onClick={() => props.onRemove()}> Remove Friend</Button>
         </div>
     )
 }
@@ -42,7 +45,7 @@ export default class Person extends Component {
 
         this.state = {
             username: "",
-            status: 0
+            status: 5
         };
     }
 
@@ -66,21 +69,84 @@ export default class Person extends Component {
         );
 
     }
+
+    handleAddFriend(){
+        let username = this.state.username;
+        UserService.sendRequest(username).then(
+            response => {
+                this.setState({status: 1});
+                this.props.history.push('/person/'+username);
+            },
+            error => {
+                console.log.error();
+            }
+        )
+    }
+
+    handleAcceptRequest(){
+        let username = this.state.username;
+        UserService.acceptRequest(username).then(
+            response => {
+                this.setState({status: 3});
+                this.props.history.push('/person/'+username);
+            },
+            error => {
+                console.log(error);
+            }
+        )
+    }
+
+    handleRejectRequest(){
+        let username = this.state.username;
+        UserService.rejectRequest(username).then(
+            response => {
+                this.setState({status: 0});
+                this.props.history.push('/person/'+username);
+            },
+            error => {
+                console.log(error);
+            }
+        )
+    }
+    handleDeleteRequest(){
+        let username = this.state.username;
+        UserService.deleteRequest(username).then(
+            response => {
+                this.setState({status: 0});
+                this.props.history.push('/person/'+username);
+            },
+            error => {
+                console.log(error);
+            }
+        )
+    }
+    handleRemoveFriend(){
+        let username = this.state.username;
+        UserService.removeFriend(username).then(
+            response => {
+                this.setState({status: 0});
+                this.props.history.push('/person/'+username);
+            },
+            error => {
+                console.log(error);
+            }
+        )
+    }
     render () {
         let username = this.state.username;
         let status = this.state.status;
         let item;
-        if (status==0) {
-            item = <SendRequest />;
+        if (status === 0) {
+            item = <SendRequest onClick={() => this.handleAddFriend()}/>;
         }
-        else if (status == 1) {
-            item = <Requested />;
+        else if (status === 1) {
+            item = <Requested onDelete={() => this.handleDeleteRequest()}/>;
         }
-        else if (status == 2) {
-            item = <Received />;
+        else if (status === 2) {
+            item = <Received onAccept={() => this.handleAcceptRequest()} onReject={() => this.handleRejectRequest()}/>;
         }
-        else {
-            item = <Friends />;
+        else if (status === 3) {
+            item = <Friends onRemove={() => this.handleRemoveFriend()}/>;
         }
         return (
             <div>
