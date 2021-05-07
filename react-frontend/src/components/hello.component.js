@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import UserService from "../services/user.service";
 
+import MyNavbar from "./navbar.component";
+
 export default class Hello extends Component {
     constructor(props){
         super(props);
@@ -33,6 +35,7 @@ export default class Hello extends Component {
     render() {
         return (
             <div className="container">
+                <MyNavbar />
                 <header className="jumbotron">
                     <h3>{this.state.content}</h3>
                 </header>

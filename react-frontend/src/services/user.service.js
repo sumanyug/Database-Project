@@ -12,12 +12,17 @@ class UserService {
             gender,
             age,
             occupation 
-        },{
-        headers: authHeader()
-            }   
+        },{ headers: authHeader() }   
         )
         .then(
         );
+    }
+    getPerson(username) {
+        return axios.get(API_URL + 'friend' , 
+        { 
+            headers: authHeader(), 
+            params: { username: username } 
+        });
     }
 }
 

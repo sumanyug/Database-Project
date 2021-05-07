@@ -7,6 +7,8 @@ import Login from "./components/login.component";
 import Register from "./components/register.component";
 import Hello from "./components/hello.component";
 import GetStarted from "./components/get-started.component"
+import Friends from "./components/friends.component";
+import Person from "./components/person.component";
 
 class App extends Component {
   constructor(props) {
@@ -40,6 +42,8 @@ class App extends Component {
           <Route exact path="/register" component={Register} />
           <Route exact path="/hello" component={Hello} />
           <Route exact path="/getstarted" component={GetStarted} />
+          <Route exact path="/friends" component={Friends} />
+          <Route path = "/person/:id" component={Person} />
         </Switch>
       </div>
     )
