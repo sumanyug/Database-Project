@@ -87,7 +87,6 @@ public class Movie {
                 ", name='" + name +
                 '}';
     }
-
     public Map<String, Object> toMap(){
         Map<String, Object> map= new HashMap<>();
         map.put("movieid", movieid);
