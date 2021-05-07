@@ -2,6 +2,7 @@ package com.example.securingweb;
 
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.Relationship.Direction;
 import java.util.Collection; 
@@ -15,18 +16,18 @@ import org.springframework.security.core.GrantedAuthority;
 public class Movie {
 
     @Id
-    private String movieid;
-
-    private double rating;
+    @GeneratedValue
+    private long movieid;
 
     private String name;
 
+    private double rating;
+
     private Movie(){}
 
-    public Movie(String movieid, double rating, String name){
-        this.rating = rating;
+    public Movie(String name){
         this.name = name;
-        this.movieid = movieid;
+        this.rating = 0.0;
     }
     
     /*@Override
@@ -57,6 +58,10 @@ public class Movie {
         return rating;
     }
 
+    public long getMovieID(){
+        return movieid;
+    }
+
     /*@Override
    public String getPassword(){
         return password;
@@ -74,14 +79,12 @@ public class Movie {
 
         Movie movie = (Movie) o;
 
-        return name.equals(movie.name) && rating==movie.rating && movieid.equals(movie.movieid);
+        return name.equals(movie.name);
     }
 
     public String toString() {
         return "Movie{" +
-                ", movieid='" + movieid + '\'' +
-                ", name='" + name + '\'' +
-                ", rating=" + rating +
+                ", name='" + name +
                 '}';
     }
 

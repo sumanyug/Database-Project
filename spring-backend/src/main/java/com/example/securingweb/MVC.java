@@ -54,38 +54,45 @@ public class MVC {
     }
 
     @GetMapping("/feedback")
-    public String feedback(@RequestParam String moviename) {
-        return moviename; 
+    public long feedback(@RequestParam long movieid) {
+        return movieid; 
     }
 
     @PostMapping(path = "/feedback", consumes = "application/json", produces = "application/json")
-    public void addFeedbackRelationship(@RequestBody Movie movie){
-        String moviename = movie.getName();
-        double rating = movie.getRating();
+    public void addFeedbackRelationship(@RequestBody Map<String, Object> data){
+        String s_movieid = (String) data.get("movieid");
+        String s_rating = (String) data.get("rating");
+
+        long movieid = Long.parseLong(s_movieid);
+        double rating = Double.parseDouble(s_rating);
+
+        //System.out.println(movieid+" "+rating);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        movierepo.addFeedbackRelationship(username, moviename, rating);
+        movierepo.addFeedbackRelationship(username, movieid, rating);
     }
 
     @GetMapping("/movie")
-    public Map<String, Object> movie(@RequestParam String moviename){
+    public Map<String, Object> movie(@RequestParam long movieid){
 
         Map<String, Object> response = new HashMap<>();
 
-        String name = moviename;
-        Movie movie = movierepo.findByName(name);
-        double avg_rating = movie.getRating();
+        // need to extract the rating by taking an average over all the users.
+        Movie movie = movierepo.findByMovieid(movieid);
+        String name = movie.getName();
+        double avg_rating = movierepo.getAvgRating(movieid);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        boolean in_watchlist = movierepo.checkInWatchlist(moviename, username);
-        boolean is_liked = movierepo.checkIfLiked(moviename, username);
+        boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
+        boolean is_liked = movierepo.checkIfLiked(movieid, username);
 
+        response.put("movieid", movieid);
         response.put("moviename", name);
         response.put("avg_rating", avg_rating);
         response.put("in_watchlist", in_watchlist);
@@ -95,16 +102,16 @@ public class MVC {
     }
 
     // add/remove from watchlist, on the "movie" URL
-    @PostMapping(path = "/movie", params="movie_name")
-    public void editMovieRelationship(@RequestParam String movie_name) {
+    @PostMapping(path = "/movie", params="movieid")
+    public void editMovieRelationship(@RequestParam long movieid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
-        boolean in_watchlist = movierepo.checkInWatchlist(movie_name, currentPrincipal.getUsername());
+        boolean in_watchlist = movierepo.checkInWatchlist(movieid, currentPrincipal.getUsername());
 
         if(in_watchlist)
-            movierepo.deleteMovieRelationship(currentPrincipal.getUsername(), movie_name);
+            movierepo.deleteMovieRelationship(currentPrincipal.getUsername(), movieid);
         else
-            movierepo.addMovieRelationship(currentPrincipal.getUsername(), movie_name);
+            movierepo.addMovieRelationship(currentPrincipal.getUsername(), movieid);
     }
 
     /*@PostMapping(path = "/movie", params="moviename")
@@ -134,8 +141,18 @@ public class MVC {
     @PostMapping(path = "/admin")
     public void addMovie(@RequestBody Map<String, Object> body){
         String name = (String) body.get("name");
-        double avg_rating = (double) body.get("avg_rating");
-        movierepo.addMovie(name, avg_rating);
+        String a_rating = (String) body.get("avg_rating");
+
+        double avg_rating = Double.parseDouble(a_rating);
+
+        Movie movie = new Movie(name);
+        movierepo.save(movie);
+
+        long movieid = movie.getMovieID();
+
+        movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
+
+        //movierepo.addMovie(name, avg_rating);
     }
 
    
@@ -165,8 +182,8 @@ public class MVC {
     }
 
     @GetMapping("/bootstrap")
-    public Map<String, List<String> > sendGenres() {
-        Map<String, List<String> > response = new HashMap<>();
+    public Map<String, List<Movie> > sendGenres() {
+        Map<String, List<Movie> > response = new HashMap<>();
 
         //System.out.println("hi1");
         List<Genre> Genres = genrerepo.findAllGenres();
@@ -175,7 +192,7 @@ public class MVC {
         for(Genre genre: Genres){
             String name = genre.getName();
             //System.out.println(name);
-            List<String> movies = genrerepo.findTop5(name);
+            List<Movie> movies = genrerepo.findTop5(name);
             response.put(name, movies);
         }
 
@@ -195,12 +212,13 @@ public class MVC {
         }
 
         for (Object name : data.values()){
-            for (String movie : (List<String>) name){
+            for (String s_movieid : (List<String>) name){
                 //System.out.println(movie);
-                if(movierepo.checkIfRatingExists(movie, username))
-                    movierepo.setRating(username, movie, 5.0);
+                long movieid = Long.parseLong(s_movieid);
+                if(movierepo.checkIfRatingExists(movieid, username))
+                    movierepo.setRating(username, movieid, 5.0);
                 else
-                    movierepo.addFeedbackRelationship(username, movie, 5.0);
+                    movierepo.addFeedbackRelationship(username, movieid, 5.0);
             }
         }
 
