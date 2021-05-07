@@ -20,7 +20,8 @@ public interface UserRepository extends Neo4jRepository <User, String>{
 
     @Query("Match (u: User)-[:Request] ->(v:User) where u.username = $username1 and v.username = $username2 return v")
     User checkRequest(String username1, String username2);
-    @Query("Match (u: User)-[:Request] ->(v:User) where (u.username = $username1 and v.username = $username2) return v")
+
+    @Query("Match (u: User)-[:Friend] ->(v:User) where (u.username = $username1 and v.username = $username2) return v")
     User checkFriend(String username1, String username2);
 
     @Query("Match " +
@@ -44,5 +45,15 @@ public interface UserRepository extends Neo4jRepository <User, String>{
 
     @Query("Match (u:User)-[r:Friend]-(v:User) where u.username = $username1 and v.username = $username2 delete r")
     void deleteFriend(String username1, String username2);
+
+    @Query("Match (u:User)-[r:Friend]-(v:User) where u.username = $username  " +
+            "return v.username as username")
+    List<String> findAllFriends(String username);
+
+    @Query("Match (u:User) where u.username=~ $searchQuery  " +
+            "return u")
+    List<User> searchPerson(String searchQuery);
+
+
 
 }
