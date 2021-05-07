@@ -157,6 +157,7 @@ public class User  implements UserDetails{
     }
 
     public void setGender(String gender){
+        if(gender != null)
         if(gender.equals("M") || gender.equals("F")){
             this.gender = gender;
         }

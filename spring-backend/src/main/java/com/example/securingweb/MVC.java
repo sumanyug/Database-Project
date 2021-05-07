@@ -305,6 +305,14 @@ public class MVC {
         return usersdetails;
     }
 
+    @GetMapping("/myrequests")
+    public List<String> findAllRequests() {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        return userrep.findAllRequests(primaryUser.getUsername());
+    }
+
+
 
 
 }
