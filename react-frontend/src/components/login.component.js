@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { NavLink } from "react-router-dom";
 
 
 import AuthService from "../services/auth.service";
@@ -85,10 +84,14 @@ export default class Login extends Component {
     }
     render() {
         return (
+          <div className="col-md-12">
             <div className="card card-container">
-              <div className="center-text">
-                <h1> LOGIN </h1>
-              </div>
+              <img
+                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                alt="profile-img"
+                className="profile-img-card"
+              />
+    
               <Form
                 onSubmit={this.handleLogin}
                 ref={c => {
@@ -145,11 +148,8 @@ export default class Login extends Component {
                   }}
                 />
               </Form>
-              <div className="center-text">
-                Don't have an account? <br />
-                Sign up <NavLink to="/register">here</NavLink>
-              </div>
             </div>
+          </div>
         );
       
     }

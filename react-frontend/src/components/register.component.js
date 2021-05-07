@@ -3,8 +3,6 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-import { NavLink } from "react-router-dom";
-
 
 import AuthService from "../services/auth.service";
 
@@ -104,7 +102,6 @@ export default class Register extends Component {
             message: response.data.message,
             successful: true
           });
-          this.props.history.push('/getstarted');
         },
         error => {
           const resMessage =
@@ -125,10 +122,14 @@ export default class Register extends Component {
 
   render() {
     return (
+      <div className="col-md-12">
         <div className="card card-container">
-          <div className="center-text">
-            <h1> SIGN UP </h1>
-          </div>
+          <img
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            alt="profile-img"
+            className="profile-img-card"
+          />
+
           <Form
             onSubmit={this.handleRegister}
             ref={c => {
@@ -188,11 +189,8 @@ export default class Register extends Component {
               }}
             />
           </Form>
-          <div className="center-text">
-            Already have an account? <br />
-            Login <NavLink to='/login'> here </NavLink>
-          </div>
         </div>
+      </div>
     );
   }
 }

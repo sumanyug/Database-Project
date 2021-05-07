@@ -2,12 +2,15 @@ package com.example.securingweb;
 
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Relationship;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.GrantedAuthority; 
+import org.springframework.security.core.GrantedAuthority;
 
 
 
@@ -21,6 +24,7 @@ public class User  implements UserDetails{
 
     private String name;
 
+    private User(){}
     @Relationship(type="Request", direction= Relationship.Direction.OUTGOING)
     Set<User> requests;
 
