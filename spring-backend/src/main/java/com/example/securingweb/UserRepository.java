@@ -59,8 +59,8 @@ public interface UserRepository extends Neo4jRepository <User, String>{
             "return u")
     List<User> searchPerson(String searchQuery);
 
-    @Query("Match (u:User)-[r:REQUEST]->(v:User) where u.username = $username  " +
-            "return v.username as username")
+    @Query("Match (u:User)-[r:REQUEST]->(v:User) where v.username = $username  " +
+            "return u.username as username")
     List<String> findAllRequests(String username);
 
     @Query("MATCH (n:User) where n.username = $username SET n.age = $age SET n.gender = $gender SET n.occupation = $occupation")
