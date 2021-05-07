@@ -8,8 +8,21 @@ import { Form, FormControl, Button } from 'react-bootstrap';
 export default class MyNavbar extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            query: ""
+        }
+        this.onQueryChange = this.onQueryChange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
+    onQueryChange(event) {
+        this.setState({query: event.target.value});
+    }
+
+    handleSearch(event) {
+        console.log("hi");
+    }
     render() {
         return (
             <Navbar bg="light" expand="lg">
@@ -19,6 +32,7 @@ export default class MyNavbar extends Component {
                 <Nav className="mr-auto">
                 <Nav.Link href="/hello">Home</Nav.Link>
                 <Nav.Link href="/friends">Friends</Nav.Link>
+                <Nav.Link href="/watchlist">Watchlist</Nav.Link>
                 <Nav.Link href="/logout">Logout</Nav.Link>
                 {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown"> */}
                     {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
@@ -28,6 +42,10 @@ export default class MyNavbar extends Component {
                     {/* <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 {/* </NavDropdown> */}
                 </Nav>
+                <Form inline>
+                    <FormControl type="text" placeholder="Search" className="search-input" value={this.state.query} onChange={this.onQueryChange} />
+                    <Button variant="outline-success" onClick={this.handleSearch}>Search</Button>
+                </Form>
                 {/* <Form inline> */}
                 {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}
                 {/* <Button variant="outline-success">Search</Button> */}

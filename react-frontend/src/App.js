@@ -10,6 +10,10 @@ import GetStarted from "./components/get-started.component"
 import Friends from "./components/friends.component";
 import Person from "./components/person.component";
 import Logout from "./components/logout.component";
+import FriendSearch from "./components/friend-search.component";
+import Watchlist from "./components/watchlist.component";
+import Movie from "./components/movie.component";
+import Admin from "./components/admin.component";
 
 class App extends Component {
   constructor(props) {
@@ -45,7 +49,11 @@ class App extends Component {
           <Route exact path="/getstarted" component={GetStarted} />
           <Route exact path="/friends" component={Friends} />
           <Route exact path="/logout" component={Logout} />
+          <Route exact path="/friend-search" component={FriendSearch} />
+          <Route exact path="/watchlist" component={Watchlist} />
+          <Route exact path="/admin" component={Admin} />
           <Route path = "/person/:id" component={Person} />
+          <Route path ="/movie/:id" component={Movie} />
         </Switch>
       </div>
     )

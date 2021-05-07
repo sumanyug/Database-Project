@@ -4,6 +4,8 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
 import UserService from "../services/user.service";
+import AuthService from "../services/auth.service";
+
 
 const required = value => {
     if (!value) {
@@ -32,11 +34,16 @@ export default class GetStarted extends Component {
             gender: 'male',
             age: 20,
             occupation: 'jobless',
+            currentUser: AuthService.getCurrentUser()
         };
         this.handleGenderChange = this.handleGenderChange.bind(this);
         this.handleAgeChange = this.handleAgeChange.bind(this);
         this.handleOccupationChange = this.handleOccupationChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+        if(!this.state.currentUser){
+            this.props.history.push('/login');
+        }
     }
 
     handleGenderChange(event) {

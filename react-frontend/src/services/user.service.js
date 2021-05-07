@@ -70,6 +70,20 @@ class UserService {
 
         );
     }
+    searchFriend(query){
+        return axios.get(API_URL + 'searchPeople?searchQuery=' + query, { headers: authHeader() });
+    }
+    getWatchlist(){
+        return axios.get(API_URL + 'watchlist', { headers: authHeader() });
+    }
+    getMovie(movie){
+        return axios.get(API_URL + 'movie?movie_name=' + movie, { 
+            headers: authHeader() 
+        });
+    }
+    getFriends(){
+        return axios.get(API_URL + 'myfriends', { headers: authHeader() });
+    }
 }
 
 export default new UserService();

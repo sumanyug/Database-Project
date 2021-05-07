@@ -9,6 +9,13 @@ import MyNavbar from "./navbar.component";
 export default class Logout extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            currentUser: AuthService.getCurrentUser()            
+        }
+        if(!this.state.currentUser){
+            this.props.history.push('/login');
+        }
     }
 
     handleLogout(){

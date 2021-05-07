@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import UserService from "../services/user.service";
+import AuthService from "../services/auth.service";
+
 import MyNavbar from "./navbar.component";
 import Button from 'react-bootstrap/Button'
 
@@ -45,8 +47,13 @@ export default class Person extends Component {
 
         this.state = {
             username: "",
-            status: 5
+            status: 5,
+            currentUser: AuthService.getCurrentUser()
         };
+
+        if(!this.state.currentUser){
+            this.props.history.push('/login');
+        }
     }
 
     componentDidMount() {

@@ -134,7 +134,8 @@ public class MVC {
     @PostMapping(path = "/admin")
     public void addMovie(@RequestBody Map<String, Object> body){
         String name = (String) body.get("name");
-        double avg_rating = (double) body.get("avg_rating");
+        // System.out.println(Float.parseFloat( (String) body.get("avg_rating")));
+        double avg_rating = Double.parseDouble(String.valueOf(body.get("avg_rating")));
         movierepo.addMovie(name, avg_rating);
     }
 
@@ -146,7 +147,7 @@ public class MVC {
 
     @PostMapping("/getstarted")
     public String getStarted(@RequestBody Map <String, Object> data){
-        String s_age = (String) data.get("age");
+        String s_age = String.valueOf(data.get("age"));
         String gender = (String) data.get("gender");
         String occupation = (String) data.get("occupation");
 
