@@ -75,8 +75,10 @@ public class MVC {
         long movieid = Long.parseLong(s_movieid);
         double rating = Double.parseDouble(s_rating);
 
+        Date date = new Date();
+        long diff = date.getTime();
 
-        movieTransactions.addRating(movieid, rating);
+        movieTransactions.addRating(movieid, rating, diff);
 
     }
 
@@ -166,7 +168,10 @@ public class MVC {
         System.out.println(movieid);
 
         movierepo.setMovieID(movieid);
-        movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
+
+        Date date = new Date();
+        long diff = date.getTime();
+        movierepo.addFeedbackRelationship("admin", movieid, avg_rating, diff); //adds a relationship from the admin to the movie 
 
         //movierepo.addMovie(name, avg_rating);
     }
@@ -267,10 +272,13 @@ public class MVC {
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
+        Date date = new Date();
+        long diff = date.getTime();
+
         if(movierepo.checkIfRatingExists(movieid, username))
-            movierepo.setRating(username, movieid, 5.0);
+            movierepo.updateFeedbackRelationship(username, movieid, 5.0, diff);
         else
-            movierepo.addFeedbackRelationship(username, movieid, 5.0);
+            movierepo.addFeedbackRelationship(username, movieid, 5.0, diff);
 
         System.out.println("Job Done");
 
@@ -400,12 +408,13 @@ public class MVC {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/" + primaryUser.getUsername();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/"+primaryUser.getUsername()))
+                .uri(URI.create(uri))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // System.out.println(response.body());
+         System.out.println(response.body());
         return response.body();
     }
 
@@ -414,27 +423,29 @@ public class MVC {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid))
+                .uri(URI.create(uri))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // System.out.println(response.body());
+         System.out.println(response.body());
         return response.body();
     }
 
 
     @GetMapping("/trendingreco")
-    public String trendingMovieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
+    public String trendingMovieRecommendations() throws IOException, InterruptedException {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/"+primaryUser.getUsername()+"/trending";
+        System.out.println(uri);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/1/trending"))
+                .uri(URI.create(uri))
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // System.out.println(response.body());
+         System.out.println(response.body());
         return response.body();
     }
 
