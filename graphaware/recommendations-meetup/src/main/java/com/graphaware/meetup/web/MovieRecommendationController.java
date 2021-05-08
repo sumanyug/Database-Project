@@ -56,14 +56,14 @@ public class MovieRecommendationController {
     @ResponseBody
     public List<RecommendationVO> recommend_movie(@PathVariable String username,@PathVariable String movie_id, @RequestParam(defaultValue = "10") int limit) {
         try (Transaction tx = database.beginTx()) {
-            return convert(engine.recommend( findByUsername(username), new SimpleConfig(limit)));
+            return convert(engine.recommend( findMovieByID(username), new SimpleConfig(limit)));
         }
     }
 
     private Node findMovieByID(String id) {
         System.out.println(id);
         int int_id = Integer.parseInt(id);
-        return getSingle(database.findNodes(Label.label("Movie"), "id", int_id), "Movie with id " + id + " does not exist.");
+        return getSingle(database.findNodes(Label.label("Movie"), "movieid", int_id), "Movie with id " + id + " does not exist.");
     }
 
     private Node findByUsername(String username) {

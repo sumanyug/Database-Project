@@ -4,5 +4,6 @@ import org.neo4j.graphdb.RelationshipType;
 
 public enum Relationships implements RelationshipType {
     RATED,
-    FRIENDS_WITH
+    FRIENDS_WITH,
+    HAS_GENRE
 }
