@@ -229,6 +229,8 @@ public class MVC {
         List<Movie> movie_list = new ArrayList<>();
         for(Long movieid: movies_needed){
             Movie movie = movierepo.matchByMovieId(movieid);
+            double avg_rating = movierepo.getAvgRating(movieid);
+            movie.setRating(avg_rating);
             //System.out.println(movie.getName());
             // String moviename=movie.getName();
             // id_name.put(moviename, movieid);
