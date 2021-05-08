@@ -24,14 +24,18 @@ public class UDetService implements UserDetailsService{
     }*/
 
     private Optional<User> findUserByUserName(String username){
-        User u = null;
-        List<User> Users = userrepo.findAll();
-        for (User user: Users){
-            if(user.getUsername().equals(username)){
-                u = user;
-                break;
+        List<User> users = userrepo.findOneByUsername(username);
+        User u;
+        if(users == null){
+            u = null;
+        }
+        else{
+            if(users.size() == 0){
+                u = null;
             }
-
+            else{
+                u = users.get(0);
+            }
         }
         Optional<User> opt = Optional.ofNullable(u);
         return opt;

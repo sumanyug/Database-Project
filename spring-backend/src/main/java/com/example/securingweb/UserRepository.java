@@ -14,8 +14,12 @@ public interface UserRepository extends Neo4jRepository <User, String>{
     List<User> findAllActiveUsers();
 
 
+
     @Query("Match (u: User) Where u.username = $username return u")
     List<User> findOneByUsername(String username);
+    @Query("Match (u: User) Where u.username = $username detach delete u")
+    List<User> deleteOneByUsername(String username);
+
 
     @Query("Match (u: User)-[:REQUEST] ->(v:User) where u.username = $username return v")
     Set<User> findRequests(String username);

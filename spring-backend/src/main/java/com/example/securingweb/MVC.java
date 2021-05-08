@@ -1,10 +1,16 @@
 package com.example.securingweb;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
@@ -335,6 +341,15 @@ public class MVC {
         return userrep.findAllRequests(primaryUser.getUsername());
     }
 
+    @PostMapping("/deleteUser")
+    public String deleteUser(){
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        userrep.deleteOneByUsername(primaryUser.getUsername());
+        return "Deleted";
+
+    }
+
 
 
 
@@ -345,6 +360,35 @@ public class MVC {
         return movies;
 
     }
+
+    @GetMapping("/homereco")
+    public String homeRecommendations() throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:7474/graphaware/home/1"++ primaryUser.getUsername()))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        return response.body();
+    }
+
+    @GetMapping("/moviereco")
+    public String movieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie"+movieid))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        return response.body();
+    }
+
 
 
 
