@@ -73,6 +73,7 @@ public class JWTAuthenticationController {
         try{
             authMan.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         }catch(RuntimeException e){
+            System.out.println("Right here");
             System.out.println(e.getClass().getName());
             System.out.println(e.getMessage());
         }
