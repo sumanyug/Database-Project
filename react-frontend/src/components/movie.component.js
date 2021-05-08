@@ -32,7 +32,6 @@ export default class Movie extends Component {
     componentDidMount() {
         const { match: { params }} = this.props;
         this.setState({id: parseInt(params.id)});
-        console.log("FUCK");
         UserService.getMovie(parseInt(params.id)).then(
             response => {
                 console.log(response);

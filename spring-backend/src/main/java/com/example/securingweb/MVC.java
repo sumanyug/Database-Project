@@ -86,20 +86,17 @@ public class MVC {
     public Map<String, Object> movie(@RequestParam long movieid){
         
         Map<String, Object> response = new HashMap<>();
-        System.out.println(movieid);
         // need to extract the rating by taking an average over all the users.
         // Long myid = new Long(movieid);
         // Optional<Movie> optional_movie = movierepo.findById(myid);
         Movie movie = movierepo.matchByMovieId(movieid);
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
-        System.out.println(name);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        System.out.println(username);
         boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
         boolean is_liked = movierepo.checkIfLiked(movieid, username);
 
