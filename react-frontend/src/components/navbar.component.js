@@ -40,6 +40,7 @@ export default class MyNavbar extends Component {
                 <Nav.Link href="/friends">Friends</Nav.Link>
                 <Nav.Link href="/watchlist">Watchlist</Nav.Link>
                 <Nav.Link href="/logout">Logout</Nav.Link>
+                <Nav.Link href="/delete">Delete Account</Nav.Link>
                 {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown"> */}
                     {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
                     {/* <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item> */}
