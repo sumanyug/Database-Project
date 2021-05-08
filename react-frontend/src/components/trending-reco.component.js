@@ -12,14 +12,14 @@ function RecList(props){
     );
    return (
         <div>
-            <h3>Home Screen Reccomendations</h3>
+            <h3>Trending Reccomendations</h3>
             <CardDeck>{listItems}</CardDeck>
         </div>
     )
     
 }
 
-export default class HomeReco extends Component {
+export default class TrendingReco extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,7 +28,7 @@ export default class HomeReco extends Component {
     }
 
     componentDidMount() {
-        UserService.getHomeReco().then(
+        UserService.getTrendingReco().then(
             response => {
                 console.log(response.data)
                 this.setState({ movies: response.data });

@@ -404,8 +404,8 @@ public class MVC {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
-        return response.body();
+        // System.out.println(response.body());
+        return "[{\"uuid\": \"32\", \"item\": \"f\", \"score\" :{\"totalScore\":\"5.0\"} }]";
     }
 
     @GetMapping("/moviereco")
