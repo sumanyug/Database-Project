@@ -43,8 +43,8 @@ export default class Hello extends Component {
         return (
             <div className="container">
                 <MyNavbar />
-                {/* <HomeReco /> */}
-                {/* <TrendingReco /> */}
+                { <HomeReco /> }
+                { <TrendingReco />}
             </div>
         )
     }

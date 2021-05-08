@@ -87,7 +87,7 @@ public class MVC {
         // need to extract the rating by taking an average over all the users.
         // Long myid = new Long(movieid);
         // Optional<Movie> optional_movie = movierepo.findById(myid);
-        Movie movie = movierepo.findByMovieid(movieid);
+        Movie movie = movierepo.matchByMovieId(movieid);
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -223,7 +223,7 @@ public class MVC {
         Map<String, Long> id_name = new HashMap<>();
 
         for(Long movieid: movies_needed){
-            Movie movie = movierepo.findByMovieid(movieid);
+            Movie movie = movierepo.matchByMovieId(movieid);
             //System.out.println(movie.getName());
             String moviename=movie.getName();
             id_name.put(moviename, movieid);
@@ -398,7 +398,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/1" + primaryUser.getUsername()))
+                .uri(URI.create("http://localhost:7474/graphaware/home/"+primaryUser.getUsername()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -412,7 +412,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie"+movieid))
+                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -427,7 +427,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/trending"))
+                .uri(URI.create("http://localhost:7474/graphaware/home/1/trending"))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
