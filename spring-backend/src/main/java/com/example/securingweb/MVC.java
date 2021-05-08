@@ -60,13 +60,12 @@ public class MVC {
 
     @PostMapping(path = "/feedback", consumes = "application/json", produces = "application/json")
     public void addFeedbackRelationship(@RequestBody Map<String, Object> data){
-        String s_movieid = (String) data.get("movieid");
-        String s_rating = (String) data.get("rating");
+        String s_movieid = String.valueOf(data.get("movieid"));
+        String s_rating = String.valueOf(data.get("rating"));
 
         long movieid = Long.parseLong(s_movieid);
         double rating = Double.parseDouble(s_rating);
 
-        //System.out.println(movieid+" "+rating);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
@@ -77,22 +76,25 @@ public class MVC {
 
     @GetMapping("/movie")
     public Map<String, Object> movie(@RequestParam long movieid){
-
+        
         Map<String, Object> response = new HashMap<>();
 
         // need to extract the rating by taking an average over all the users.
-        Movie movie = movierepo.findByMovieid(movieid);
+        Long myid = new Long(movieid);
+        Optional<Movie> optional_movie = movierepo.findById(myid);
+        Movie movie = optional_movie.get();
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
-        boolean is_liked = movierepo.checkIfLiked(movieid, username);
+        boolean in_watchlist = movierepo.checkInWatchlist(myid, username);
+        boolean is_liked = movierepo.checkIfLiked(myid, username);
 
-        response.put("movieid", movieid);
+        response.put("id", movieid);
         response.put("moviename", name);
         response.put("avg_rating", avg_rating);
         response.put("in_watchlist", in_watchlist);
@@ -140,16 +142,18 @@ public class MVC {
 
     @PostMapping(path = "/admin")
     public void addMovie(@RequestBody Map<String, Object> body){
+
         String name = (String) body.get("name");
-        String a_rating = (String) body.get("avg_rating");
+        
+        String a_rating = String.valueOf(body.get("avg_rating"));
 
         double avg_rating = Double.parseDouble(a_rating);
 
         Movie movie = new Movie(name);
         movierepo.save(movie);
 
-        long movieid = movie.getMovieID();
-
+        Long movieid = movie.getId();
+        System.out.println(movieid);
         movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
 
         //movierepo.addMovie(name, avg_rating);
@@ -182,21 +186,27 @@ public class MVC {
     }
 
     @GetMapping("/bootstrap")
-    public Map<String, List<Movie> > sendGenres() {
+    public List<Genre> sendGenres() {
         Map<String, List<Movie> > response = new HashMap<>();
 
         //System.out.println("hi1");
         List<Genre> Genres = genrerepo.findAllGenres();
         //System.out.println("hi2");
+        // List<String> GenreNames = new ArrayList<String>();
+        // for(Genre genre: Genres){
+            // String name = genre.getName();
+            // GenreNames.add(name);
+            // System.out.println(name);
+            // List<Movie> movies = genrerepo.findTop5(name);
+            // response.put(name, movies);
+        // }
+        return Genres;
+    }
 
-        for(Genre genre: Genres){
-            String name = genre.getName();
-            //System.out.println(name);
-            List<Movie> movies = genrerepo.findTop5(name);
-            response.put(name, movies);
-        }
-
-        return response;
+    @GetMapping("/genremovies")
+    public List<Movie> getGenreMovies(@RequestParam String genrename){
+        List<Movie> movies_needed = genrerepo.findTop5(genrename);
+        return movies_needed;
     }
 
     @PostMapping("/bootstrap")
@@ -252,8 +262,6 @@ public class MVC {
                 personFound.toString();
 
                 state = usert.personStatus(primaryUser.getUsername(), personFound.getUsername());
-                System.out.println("Status of rohan");
-                System.out.println(state);
                 response.putAll(personFound.toMap());
                 response.put("state", state);
             }
@@ -271,8 +279,6 @@ public class MVC {
     }
     @PostMapping("/addrequest")
     public Map<String, Object> addRequest(@RequestParam String username){
-        System.out.println("REQUEST SENT TO");
-        System.out.println(username);
         return usert.addRequest(username);
 
     }
@@ -285,7 +291,6 @@ public class MVC {
 
     @PostMapping("/deleterequest") // To delete a received request
     public Map<String, Object> deleteRequest(@RequestParam String username){
-        System.out.println("DELETING REQUEST");
         return usert.deleteRequest(username);
 
     }
