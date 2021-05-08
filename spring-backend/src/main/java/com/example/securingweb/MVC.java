@@ -221,22 +221,25 @@ public class MVC {
     }
 
     @GetMapping("/genremovies")
-    public Map<String,Long> getGenreMovies(@RequestParam String genrename){
+    public List<Movie> getGenreMovies(@RequestParam String genrename){
         List<Long> movies_needed = genrerepo.findTop5(genrename);
         //System.out.println(movies_needed);
 
         Map<String, Long> id_name = new HashMap<>();
-
+        List<Movie> movie_list = new ArrayList<>();
         for(Long movieid: movies_needed){
             Movie movie = movierepo.matchByMovieId(movieid);
+            double avg_rating = movierepo.getAvgRating(movieid);
+            movie.setRating(avg_rating);
             //System.out.println(movie.getName());
-            String moviename=movie.getName();
-            id_name.put(moviename, movieid);
+            // String moviename=movie.getName();
+            // id_name.put(moviename, movieid);
+            movie_list.add(movie);
         }
 
         //System.out.println(id_name);
 
-        return id_name;
+        return movie_list;
     }
 
     // @PostMapping("/bootstrap")
@@ -278,6 +281,8 @@ public class MVC {
             movierepo.updateFeedbackRelationship(username, movieid, 5.0, diff);
         else
             movierepo.addFeedbackRelationship(username, movieid, 5.0, diff);
+
+        System.out.println("Job Done");
 
     }
 
@@ -395,9 +400,18 @@ public class MVC {
     @GetMapping("/searchmovie")
     public List<Movie> searchMovie(@RequestParam String searchQuery) {
         String finalSearchQuery = ".*" + searchQuery + ".*";
+        System.out.println(finalSearchQuery);
         List<Movie> movies = movierepo.getMovies(finalSearchQuery);
-        return movies;
+        List<Movie> ls = new ArrayList<>();
 
+        for(Movie movie : movies){
+            long movieid = movie.getKey();
+            double avg_rating = movierepo.getAvgRating(movieid);
+            movie.setRating(avg_rating);
+            ls.add(movie);
+        }
+        return ls;
+        //return movies;
     }
 
     @GetMapping("/homereco")

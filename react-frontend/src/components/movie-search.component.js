@@ -3,56 +3,73 @@ import React, { Component } from "react";
 import UserService from "../services/user.service";
 import MyNavbar from "./navbar.component";
 
+import { Link } from "react-router-dom";
 import MovieCard from "./movie-card.component";
 
 import CardColumns from 'react-bootstrap/CardColumns'
 
-function MovieList(props) {
-    const movies = props.movies;
-    const listItems = movies.map((movie) =>
-        <li key={movie.movieID}>
+function ResultList(props) {
+    const results = props.results;
+    const listItems = results.map((movie) =>
+        <li key={movie.id}>
             <MovieCard title={movie.name} rating={movie.rating} id={movie.id}/>
         </li>
-    )
-
+    );
     return (
         <div>
-            <h4>Results</h4>
-            <CardColumns>
+            {results.length > 0 &&
+                <h4>Results</h4>
+            }
+           <CardColumns>
                 {listItems}
             </CardColumns>
         </div>
-    )
+    );
 }
 
-export default class MovieSearch extends Component {
-    constructor(props){
+export default class FriendSearch extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             query: "",
-            movies: []
+            results: []
         }
+
+        this.onChangeQuery = this.onChangeQuery.bind(this);
+        this.handleQuery = this.handleQuery.bind(this);
+    }
+    onChangeQuery(event) {
+        this.setState({
+            query: event.target.value
+        });
     }
 
-    componentDidMount() {
-        const { query } = this.props.location.state;
-        console.log(query);
+    handleQuery (event) {
+        event.preventDefault();
+        let query = this.state.query;
         UserService.searchMovie(query).then(
             response => {
                 console.log(response);
-                this.setState({ movies: response.data });
+                let results = response.data;
+                this.setState({results: results});
             },
             error => {
                 console.log(error);
             }
-        )
-    }
-    render() {
-        let movies = this.state.movies;
+        );
+    } 
+    render () {
         return (
             <div>
                 < MyNavbar />
-                < MovieList movies={movies} />
+                Type in a movie name...
+                <div className="center-text">
+                    <form>
+                        <input type="text" value={this.state.query} onChange={this.onChangeQuery} />
+                        <button onClick={this.handleQuery}> Search </button>
+                    </form>
+                </div>
+                <ResultList results={this.state.results} />
             </div>
         )
     }

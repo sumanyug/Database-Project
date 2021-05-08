@@ -26,9 +26,6 @@ class AuthService {
         localStorage.removeItem("user");
     }
 
-    delete(){
-        return axios.post(API_URL + "deleteAccount", { headers: authHeader() });
-    }
     register(username, password) {
         return axios.post(API_URL + "register", {
             username,

@@ -73,6 +73,7 @@ class UserService {
         return axios.get(API_URL + 'searchPeople?searchQuery=' + query, { headers: authHeader() });
     }
     searchMovie(query){
+        console.log(query);
         return axios.get(API_URL + "searchmovie?searchQuery=" + query, { headers: authHeader() });
     }
     getWatchlist(){

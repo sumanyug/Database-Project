@@ -81,6 +81,10 @@ public class Movie {
         return genres;
     }
 
+    public void setRating(double rating1){
+        rating = rating1;
+    }
+
     /*@Override
    public String getPassword(){
         return password;
