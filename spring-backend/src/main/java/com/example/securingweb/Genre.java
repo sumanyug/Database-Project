@@ -17,20 +17,28 @@ import org.springframework.security.core.GrantedAuthority;
 @Node ("Genre")
 public class Genre{
 
+    @Relationship(type="HAS_GENRE", direction=Relationship.Direction.INCOMING)
+    Set<Movie> movies;
+
     @Id
-    private int id;
+    private Integer id;
 
     private String name;
 
     private Genre(){}
 
-    public Genre(int id, String name){
+    public Genre(Integer id, String name, Set<Movie> movies){
         this.id = id;
         this.name = name;
+        this.movies = movies;
     }
 
     public String getName(){
         return name;
+    }
+
+    public Set<Movie> getMovies(){
+        return movies;
     }
 
     @Override

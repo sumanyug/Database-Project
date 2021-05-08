@@ -69,4 +69,7 @@ public interface UserRepository extends Neo4jRepository <User, String>{
 
     @Query("MATCH (n:User) where n.username = $username SET n.age = $age SET n.gender = $gender SET n.occupation = $occupation")
     void setProperties(String username, int age, String gender, String occupation);
+
+    @Query("Match (n:User) WHERE n.username=$username DETACH DELETE n")
+    void delete(String username);
 }
