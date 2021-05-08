@@ -385,6 +385,19 @@ public class MVC {
     }
 
 
+    @GetMapping("trendingrecos")
+    public String trendingMovieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/trending"))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        return response.body();
+    }
 
 
 
