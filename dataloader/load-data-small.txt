@@ -1,0 +1,103 @@
+CREATE CONSTRAINT  ON (m:Movie) ASSERT m.movieid IS UNIQUE;
+CREATE CONSTRAINT ON (u:User) ASSERT u.username IS UNIQUE;
+CREATE CONSTRAINT  ON (g: Genre) ASSERT g.id is UNIQUE;
+
+LOAD CSV WITH HEADERS FROM 'file:///u.user' AS line FIELDTERMINATOR '|' MERGE (u:User{username:line.UserID}) ON CREATE SET u.age = toInteger(line.Age), u.gender = line.Gender, u.occupation = line.occupation, u.zipcode = toInteger(line.ZipCode), u.name="dataloadernodes";
+
+
+LOAD CSV WITH HEADERS FROM 'file:///u.genre' AS line FIELDTERMINATOR '|' MERGE (g:Genre {id:toInteger(line.GenreID)}) ON CREATE SET g.name = line.GenreName;
+
+
+LOAD CSV WITH HEADERS
+FROM 'file:///u.item'
+AS line FIELDTERMINATOR '|'
+MERGE (m:Movie {movieid:toInteger(line.MovieId)})
+ON CREATE SET
+m.name = line.MovieTitle,
+m.imdburl = line.IMDbURL,
+m.rating = 0.0;
+
+LOAD CSV WITH HEADERS
+FROM 'file:///u.item'
+AS line
+FIELDTERMINATOR '|'
+MATCH (movie:Movie {movieid:toInteger(line.MovieId)})
+MATCH (adv: Genre {name: "Adventure"})
+MATCH (act: Genre {name: "Action"})
+MATCH (child: Genre {name: "Children's"})
+MATCH (comedy: Genre {name: "Comedy"})
+MATCH (crime: Genre {name: "Crime"})
+MATCH (doc: Genre {name: "Documentary"})
+MATCH (drama: Genre {name: "Drama"})
+MATCH (anim: Genre {name: "Animation"})
+MATCH (fant: Genre {name: "Fantasy"})
+MATCH (noir: Genre {name: "Film-Noir"})
+MATCH (horror: Genre {name: "Horror"})
+MATCH (musical: Genre {name: "Musical"})
+MATCH (myst: Genre {name: "Mystery"})
+MATCH (romance: Genre {name: "Romance"})
+MATCH (sci: Genre {name: "Sci-Fi"})
+MATCH (thriller: Genre {name: "Thriller"})
+MATCH (war: Genre {name: "War"})
+MATCH (western: Genre {name: "Western"})
+FOREACH(n in CASE WHEN toInteger(line.Adventure) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(adv))
+FOREACH(n in CASE WHEN toInteger(line.Action) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(act))
+FOREACH(n in CASE WHEN toInteger(line.Animation) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(anim))
+FOREACH(n in CASE WHEN toInteger(line.Childrens) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(child))
+FOREACH(n in CASE WHEN toInteger(line.Comedy) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(comedy))
+FOREACH(n in CASE WHEN toInteger(line.Crime) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(crime))
+FOREACH(n in CASE WHEN toInteger(line.Documentary) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(doc))
+FOREACH(n in CASE WHEN toInteger(line.Drama) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(drama))
+FOREACH(n in CASE WHEN toInteger(line.Fantasy) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(fant))
+FOREACH(n in CASE WHEN toInteger(line.FilmNoir) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(noir))
+FOREACH(n in CASE WHEN toInteger(line.Horror) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(horror))
+FOREACH(n in CASE WHEN toInteger(line.Musical) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(musical))
+FOREACH(n in CASE WHEN toInteger(line.Mystery) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(myst))
+FOREACH(n in CASE WHEN toInteger(line.Romance) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(romance))
+FOREACH(n in CASE WHEN toInteger(line.SciFi) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(sci))
+FOREACH(n in CASE WHEN toInteger(line.Thriller) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(thriller))
+FOREACH(n in CASE WHEN toInteger(line.War) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(war))
+FOREACH(n in CASE WHEN toInteger(line.Western) = 1 THEN [1] ELSE [] END | MERGE
+(movie)-[:HAS_GENRE]->(western));
+
+
+:auto USING PERIODIC COMMIT 500
+LOAD CSV WITH HEADERS
+FROM 'file:///u.data_small'
+AS line
+FIELDTERMINATOR ' '
+MATCH (movie:Movie {movieid:toInteger(line.movieID)})
+MATCH (user:User {username:line.userID})
+MERGE (user)-[r:RATED]->(movie)
+ON CREATE SET
+r.rating = toInteger(line.rating),
+r.timestamp = toInteger(line.timestamp);
+
+:auto USING PERIODIC COMMIT 100
+LOAD CSV WITH HEADERS
+FROM 'file:///network.csv'
+AS line
+MATCH (user1:User {username:line.user1})
+MATCH (user2:User {username:line.user2})
+MERGE (user1)-[:FRIENDS_WITH]->(user2);
+
+
+
+
