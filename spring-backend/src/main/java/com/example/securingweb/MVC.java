@@ -75,8 +75,10 @@ public class MVC {
         long movieid = Long.parseLong(s_movieid);
         double rating = Double.parseDouble(s_rating);
 
+        Date date = new Date();
+        long diff = date.getTime();
 
-        movieTransactions.addRating(movieid, rating);
+        movieTransactions.addRating(movieid, rating, diff);
 
     }
 
@@ -169,7 +171,10 @@ public class MVC {
         System.out.println(movieid);
 
         movierepo.setMovieID(movieid);
-        movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
+
+        Date date = new Date();
+        long diff = date.getTime();
+        movierepo.addFeedbackRelationship("admin", movieid, avg_rating, diff); //adds a relationship from the admin to the movie 
 
         //movierepo.addMovie(name, avg_rating);
     }
@@ -269,10 +274,13 @@ public class MVC {
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
+        Date date = new Date();
+        long diff = date.getTime();
+
         if(movierepo.checkIfRatingExists(movieid, username))
-            movierepo.setRating(username, movieid, 5.0);
+            movierepo.updateFeedbackRelationship(username, movieid, 5.0, diff);
         else
-            movierepo.addFeedbackRelationship(username, movieid, 5.0);
+            movierepo.addFeedbackRelationship(username, movieid, 5.0, diff);
 
     }
 

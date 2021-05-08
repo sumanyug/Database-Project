@@ -15,7 +15,7 @@ public class MovieTransactions {
         this.movierepo = movierepo;
     }
 
-    public void addRating(Long movieid, double rating){
+    public void addRating(Long movieid, double rating, long timestamp){
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
 
@@ -23,10 +23,10 @@ public class MovieTransactions {
         boolean existsOrNot = movierepo.checkIfRatingExists(movieid,primaryUser.getUsername());
         System.out.println(existsOrNot);
         if (existsOrNot){
-            movierepo.updateFeedbackRelationship(primaryUser.getUsername(),movieid, rating);
+            movierepo.updateFeedbackRelationship(primaryUser.getUsername(),movieid, rating, timestamp);
         }
         else{
-            movierepo.addFeedbackRelationship(primaryUser.getUsername(),movieid, rating);
+            movierepo.addFeedbackRelationship(primaryUser.getUsername(),movieid, rating, timestamp);
         }
     }
 
