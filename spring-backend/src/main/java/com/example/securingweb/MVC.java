@@ -75,8 +75,10 @@ public class MVC {
         long movieid = Long.parseLong(s_movieid);
         double rating = Double.parseDouble(s_rating);
 
+        Date date = new Date();
+        long diff = date.getTime();
 
-        movieTransactions.addRating(movieid, rating);
+        movieTransactions.addRating(movieid, rating, diff);
 
     }
 
@@ -84,20 +86,17 @@ public class MVC {
     public Map<String, Object> movie(@RequestParam long movieid){
         
         Map<String, Object> response = new HashMap<>();
-        System.out.println(movieid);
         // need to extract the rating by taking an average over all the users.
         // Long myid = new Long(movieid);
         // Optional<Movie> optional_movie = movierepo.findById(myid);
         Movie movie = movierepo.matchByMovieId(movieid);
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
-        System.out.println(name);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        System.out.println(username);
         boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
         boolean is_liked = movierepo.checkIfLiked(movieid, username);
 
@@ -169,7 +168,10 @@ public class MVC {
         System.out.println(movieid);
 
         movierepo.setMovieID(movieid);
-        movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
+
+        Date date = new Date();
+        long diff = date.getTime();
+        movierepo.addFeedbackRelationship("admin", movieid, avg_rating, diff); //adds a relationship from the admin to the movie 
 
         //movierepo.addMovie(name, avg_rating);
     }
@@ -269,10 +271,13 @@ public class MVC {
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
+        Date date = new Date();
+        long diff = date.getTime();
+
         if(movierepo.checkIfRatingExists(movieid, username))
-            movierepo.setRating(username, movieid, 5.0);
+            movierepo.updateFeedbackRelationship(username, movieid, 5.0, diff);
         else
-            movierepo.addFeedbackRelationship(username, movieid, 5.0);
+            movierepo.addFeedbackRelationship(username, movieid, 5.0, diff);
 
     }
 

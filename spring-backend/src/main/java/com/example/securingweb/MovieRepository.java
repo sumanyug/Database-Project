@@ -21,14 +21,14 @@ public interface MovieRepository extends Neo4jRepository <Movie, Long>{
     @Query("MATCH (n:Movie), (u:User) WHERE id(n) = $movieid and u.username = $username CREATE (u)-[r:WATCH_LIST]->(n)")
     void addMovieRelationship(String username, Long movieid);
 
-    @Query("MATCH (n:Movie), (u:User) WHERE id(n) = $movieid and u.username = $username CREATE (u)-[r:RATED {rating: $rating}]->(n)")
-    void addFeedbackRelationship(String username, Long movieid, double rating);
+    @Query("MATCH (n:Movie), (u:User) WHERE id(n) = $movieid and u.username = $username CREATE (u)-[r:RATED {rating: $rating, timestamp: $timestamp}]->(n)")
+    void addFeedbackRelationship(String username, Long movieid, double rating, long timestamp);
 
     @Query("MATCH (n:Movie) where id(n) = $movieid return n")
     Movie matchByMovieId(Long movieid);
 
-    @Query("MATCH (u:User)-[r:RATED]->(n:Movie) WHERE id(n) = $movieid and u.username = $username set r.rating = $rating")
-    void updateFeedbackRelationship(String username, Long movieid, double rating);
+    @Query("MATCH (u:User)-[r:RATED]->(n:Movie) WHERE id(n) = $movieid and u.username = $username set r.rating = $rating, r.timestamp = $timestamp")
+    void updateFeedbackRelationship(String username, Long movieid, double rating, long timestamp);
 
     @Query("MATCH (m:Movie), (u:User) WHERE id(m) = $movieid AND u.username = $username RETURN exists((m)<-[:WATCH_LIST]-(u))")
     boolean checkInWatchlist(Long movieid, String username);
