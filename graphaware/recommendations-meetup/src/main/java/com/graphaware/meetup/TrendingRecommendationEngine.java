@@ -40,7 +40,8 @@ public class TrendingRecommendationEngine extends Neo4jTopLevelDelegatingRecomme
     protected List<BlacklistBuilder<Node, Node>> blacklistBuilders() {
         return Arrays.<BlacklistBuilder<Node, Node>>asList(
                 new ExistingRelationshipBlacklistBuilder(RATED, BOTH)
-        );    }
+        );    
+    }
 
     @Override
     protected List<Filter<Node, Node>> filters() {

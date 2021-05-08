@@ -1,0 +1,11 @@
+MATCH (m1:Movie), (m2:Movie) WHERE m1.movieid > m2.movieid 
+MATCH (m1)<-[r:RATED]-(u:User)
+WITH toFloat(AVG(r.rating)) as m1mean, m1,m2
+MATCH (m2)<-[r:RATED]-(u:User)
+WITH toFloat(AVG(r.rating)) as m2mean, m1mean, m1,m2
+MATCH (m1)<-[r1:RATED]-(u:User)-[r2:RATED]->(m2)
+WITH SUM((r1.rating + 0.5 - m1mean)*(r2.rating + 0.5 - m2mean)) as numerator,
+SQRT(SUM((r1.rating + 0.5 - m1mean)^2)*SUM((r2.rating + 0.5 - m2mean)^2)) AS denominator,
+m1, m2, COUNT(r1) as r1count WHERE denominator > 0 AND r1count> 5
+MERGE (m1)-[s:SIMILARITY]-(m2)
+SET s.coeff = (numerator/denominator);

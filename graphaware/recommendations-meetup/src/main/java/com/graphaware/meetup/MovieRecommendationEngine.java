@@ -7,6 +7,7 @@ import com.graphaware.reco.generic.filter.BlacklistBuilder;
 import com.graphaware.reco.generic.filter.Filter;
 import com.graphaware.reco.generic.log.Logger;
 import com.graphaware.reco.generic.post.PostProcessor;
+import com.graphaware.reco.neo4j.filter.ExcludeSelf;
 import com.graphaware.reco.neo4j.engine.Neo4jTopLevelDelegatingRecommendationEngine;
 import org.neo4j.graphdb.Node;
 
@@ -14,6 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.neo4j.graphdb.Direction.BOTH;
+import static com.graphaware.meetup.domain.Relationships.RATED;
 
 public class MovieRecommendationEngine extends Neo4jTopLevelDelegatingRecommendationEngine{
 
@@ -32,8 +35,9 @@ public class MovieRecommendationEngine extends Neo4jTopLevelDelegatingRecommenda
 
     @Override
     protected List<BlacklistBuilder<Node, Node>> blacklistBuilders() {
-        return Collections.emptyList(); //todo add your own blacklist builders instead
-    }
+        return Arrays.<BlacklistBuilder<Node, Node>>asList(
+                new ExcludeSelf()
+        );        }
 
     @Override
     protected List<Filter<Node, Node>> filters() {
