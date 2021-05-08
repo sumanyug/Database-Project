@@ -367,7 +367,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/1"++ primaryUser.getUsername()))
+                .uri(URI.create("http://localhost:7474/graphaware/home/1"+ primaryUser.getUsername()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
