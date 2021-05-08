@@ -1,4 +1,3 @@
-CREATE CONSTRAINT  ON (m:Movie) ASSERT m.movieid IS UNIQUE;
 CREATE CONSTRAINT ON (u:User) ASSERT u.username IS UNIQUE;
 CREATE CONSTRAINT  ON (g: Genre) ASSERT g.id is UNIQUE;
 
@@ -98,6 +97,6 @@ MATCH (user1:User {username:line.user1})
 MATCH (user2:User {username:line.user2})
 MERGE (user1)-[:FRIENDS_WITH]->(user2);
 
+MATCH s(m:Movie) SET m.movieid=id(m);
 
-
-
+CREATE CONSTRAINT  ON (m:Movie) ASSERT m.movieid IS UNIQUE;

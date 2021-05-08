@@ -40,6 +40,7 @@ export default class MyNavbar extends Component {
                 <Nav.Link href="/friends">Friends</Nav.Link>
                 <Nav.Link href="/watchlist">Watchlist</Nav.Link>
                 <Nav.Link href="/logout">Logout</Nav.Link>
+                <Nav.Link href="/delete">Delete Account</Nav.Link>
                 {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown"> */}
                     {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
                     {/* <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item> */}
@@ -50,7 +51,7 @@ export default class MyNavbar extends Component {
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Search" className="search-input" value={this.state.query} onChange={this.onQueryChange} />
-                    <Link to={{ pathname: "/movie-search", state: {query: this.state.query} }}>Search</Link>
+                    <Link onClick={() => window.location.reload()} to={{ pathname: "/movie-search", state: {query: this.state.query} }}>Search</Link>
                 </Form>
                 {/* <Form inline> */}
                 {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}

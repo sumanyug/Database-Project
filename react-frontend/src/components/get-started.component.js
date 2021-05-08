@@ -67,7 +67,6 @@ export default class GetStarted extends Component {
             this.state.occupation
         ).then(
             response => {
-                console.log(response);
                 this.props.history.push('/hello')
 
             }

@@ -25,7 +25,6 @@ class UserService {
         });
     }
     sendRequest(username){
-        console.log(username);
         return axios.post(API_URL + 'addrequest?username=' + username,
         {},
          { headers: authHeader() }
@@ -116,8 +115,12 @@ class UserService {
     getTrendingReco(){
         return axios.get(API_URL + "trendingreco", { headers: authHeader() });;
     }
-    getMovieReco(){
-        return axios.get(API_URL + "moviereco", { headers: authHeader() } );
+    getMovieReco(movieid){
+        return axios.get(API_URL + "moviereco?movieid=" + movieid, { headers: authHeader() } );
+    }
+    delete(){
+        axios.post(API_URL + "deleteUser", {}, { headers: authHeader() });
+        localStorage.removeItem("user");
     }
 }
 
