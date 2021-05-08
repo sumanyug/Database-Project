@@ -24,10 +24,17 @@ public class User  implements UserDetails{
 
     private String name;
 
+<<<<<<< HEAD
     private Integer age;
     private String gender;
     private String occupation;
     private Integer zipcode;
+=======
+     private int age;
+     private String gender;
+     private String occupation;
+     private int zipcode;
+>>>>>>> c95964dd0c8f6fa8519f7b1ae0b5c5cdb30b30fd
 
 
     private User(){}
@@ -49,12 +56,21 @@ public class User  implements UserDetails{
         if( this.requests == null) this.requests = new HashSet<>();
         this.friends = friends;
         if( this.friends == null) this.friends = new HashSet<>();
+<<<<<<< HEAD
         this.age = age;
         this.gender = gender;
         this.occupation = occupation;
         this.zipcode = zipcode;
         if(this.gender == null) this.gender = "B";
         if(this.occupation== null) this.occupation = "";
+=======
+         this.age = age;
+         this.gender = gender;
+         this.occupation = occupation;
+         this.zipcode = zipcode;
+         if(this.gender == null) this.gender = "B";
+         if(this.occupation== null) this.occupation = "";
+>>>>>>> c95964dd0c8f6fa8519f7b1ae0b5c5cdb30b30fd
     }
     
     @Override

@@ -31,16 +31,19 @@ public class MVC {
 
     private UserRepository userrep;
     private UserTransactions usert;
+    private MovieTransactions movieTransactions;
 
 
     @Autowired
-    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert, MovieRepository movierepo, GenreRepository genrerepo){
+    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert,
+               MovieRepository movierepo, GenreRepository genrerepo, MovieTransactions movietransactions){
         this.det = det;
         this.passwordEncoder = passwordEncoder;
         this.userrep = userrep;
         this.usert = usert;
         this.movierepo = movierepo;
         this.genrerepo = genrerepo;
+        this.movieTransactions = movietransactions;
     }
 
 
@@ -73,11 +76,8 @@ public class MVC {
         double rating = Double.parseDouble(s_rating);
 
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentPrincipal = (User) authentication.getPrincipal();
-        String username = currentPrincipal.getUsername();
+        movieTransactions.addRating(movieid, rating);
 
-        movierepo.addFeedbackRelationship(username, movieid, rating);
     }
 
     @GetMapping("/movie")
@@ -379,7 +379,11 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
+<<<<<<< HEAD
                 .uri(URI.create("http://localhost:7474/graphaware/home/1" + primaryUser.getUsername()))
+=======
+                .uri(URI.create("http://localhost:7474/graphaware/home/1"+ primaryUser.getUsername()))
+>>>>>>> c95964dd0c8f6fa8519f7b1ae0b5c5cdb30b30fd
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -402,6 +406,19 @@ public class MVC {
     }
 
 
+    @GetMapping("trendingrecos")
+    public String trendingMovieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/trending"))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        return response.body();
+    }
 
 
 
