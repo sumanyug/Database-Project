@@ -84,7 +84,7 @@ public class UserTransactions {
                 String username2 = personFound.getUsername();
                 if (userRepository.checkRequest(username2, username1) == null &&
                         userRepository.checkFriend(username1, username2) == null) {
-                    userRepository.addFriend(username1, username2);
+                    userRepository.addRequest(username1, username2);
                     added = true;
                 }
                 response.putAll(personFound.toMap());
