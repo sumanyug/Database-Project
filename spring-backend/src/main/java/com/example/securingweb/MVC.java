@@ -423,7 +423,7 @@ public class MVC {
     }
 
 
-    @GetMapping("trendingrecos")
+    @GetMapping("/trendingreco")
     public String trendingMovieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;

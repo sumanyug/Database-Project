@@ -110,6 +110,15 @@ class UserService {
     bootstrapMovie(movie){
         return axios.post(API_URL + "bootstrap?movieid="+movie, {}, { headers: authHeader() });
     }
+    getHomeReco(){
+        return axios.get(API_URL + "homereco", { headers: authHeader() });
+    }
+    getTrendingReco(){
+        return axios.get(API_URL + "trendingreco", { headers: authHeader() });;
+    }
+    getMovieReco(){
+        return axios.get(API_URL + "moviereco", { headers: authHeader() } );
+    }
 }
 
 export default new UserService();

@@ -26,12 +26,8 @@ public class UserTransactions {
             state = 3;
         }
         else {
-            System.out.println("HIIII");
-            System.out.println(username1);
-            System.out.println(username2);
             if (userRepository.checkRequest(username1, username2) != null) state = 1;
             else if(userRepository.checkRequest(username2, username1) != null) state = 2;
-            System.out.println(state);
         }
         return state;
 
