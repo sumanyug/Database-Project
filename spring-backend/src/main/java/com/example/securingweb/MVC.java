@@ -216,22 +216,23 @@ public class MVC {
     }
 
     @GetMapping("/genremovies")
-    public Map<String,Long> getGenreMovies(@RequestParam String genrename){
+    public List<Movie> getGenreMovies(@RequestParam String genrename){
         List<Long> movies_needed = genrerepo.findTop5(genrename);
         //System.out.println(movies_needed);
 
         Map<String, Long> id_name = new HashMap<>();
-
+        List<Movie> movie_list = new ArrayList<>();
         for(Long movieid: movies_needed){
             Movie movie = movierepo.matchByMovieId(movieid);
             //System.out.println(movie.getName());
-            String moviename=movie.getName();
-            id_name.put(moviename, movieid);
+            // String moviename=movie.getName();
+            // id_name.put(moviename, movieid);
+            movie_list.add(movie);
         }
 
         //System.out.println(id_name);
 
-        return id_name;
+        return movie_list;
     }
 
     // @PostMapping("/bootstrap")
@@ -270,6 +271,8 @@ public class MVC {
             movierepo.setRating(username, movieid, 5.0);
         else
             movierepo.addFeedbackRelationship(username, movieid, 5.0);
+
+        System.out.println("Job Done");
 
     }
 

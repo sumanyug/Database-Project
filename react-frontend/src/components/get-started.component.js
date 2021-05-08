@@ -33,7 +33,7 @@ export default class GetStarted extends Component {
         this.state = {
             gender: 'male',
             age: 20,
-            occupation: 'jobless',
+            occupation: 'student',
             currentUser: AuthService.getCurrentUser()
         };
         this.handleGenderChange = this.handleGenderChange.bind(this);
@@ -67,7 +67,7 @@ export default class GetStarted extends Component {
             this.state.occupation
         ).then(
             response => {
-                this.props.history.push('/hello')
+                this.props.history.push('/bootstrap')
 
             }
         );
