@@ -402,8 +402,16 @@ public class MVC {
         String finalSearchQuery = ".*" + searchQuery + ".*";
         System.out.println(finalSearchQuery);
         List<Movie> movies = movierepo.getMovies(finalSearchQuery);
-        return movies;
+        List<Movie> ls = new ArrayList<>();
 
+        for(Movie movie : movies){
+            long movieid = movie.getKey();
+            double avg_rating = movierepo.getAvgRating(movieid);
+            movie.setRating(avg_rating);
+            ls.add(movie);
+        }
+        return ls;
+        //return movies;
     }
 
     @GetMapping("/homereco")
