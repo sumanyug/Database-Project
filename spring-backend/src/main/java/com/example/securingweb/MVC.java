@@ -398,6 +398,7 @@ public class MVC {
     @GetMapping("/searchmovie")
     public List<Movie> searchMovie(@RequestParam String searchQuery) {
         String finalSearchQuery = ".*" + searchQuery + ".*";
+        System.out.println(finalSearchQuery);
         List<Movie> movies = movierepo.getMovies(finalSearchQuery);
         return movies;
 
