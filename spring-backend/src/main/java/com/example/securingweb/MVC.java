@@ -401,7 +401,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/1" + primaryUser.getUsername()))
+                .uri(URI.create("http://localhost:7474/graphaware/home/"+primaryUser.getUsername()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -415,7 +415,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie"+movieid))
+                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -430,7 +430,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/trending"))
+                .uri(URI.create("http://localhost:7474/graphaware/home/1/trending"))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

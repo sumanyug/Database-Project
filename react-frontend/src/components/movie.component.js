@@ -96,7 +96,7 @@ export default class Movie extends Component {
                     </Card.Body>
                 </Card>
                 </div>
-                {/* <MovieReco title={title} id={id}/> */}
+                {<MovieReco title={title} id={id}/>}
             </div>
         )
     }
