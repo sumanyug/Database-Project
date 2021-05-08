@@ -31,16 +31,19 @@ public class MVC {
 
     private UserRepository userrep;
     private UserTransactions usert;
+    private MovieTransactions movieTransactions;
 
 
     @Autowired
-    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert, MovieRepository movierepo, GenreRepository genrerepo){
+    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert,
+               MovieRepository movierepo, GenreRepository genrerepo, MovieTransactions movietransactions){
         this.det = det;
         this.passwordEncoder = passwordEncoder;
         this.userrep = userrep;
         this.usert = usert;
         this.movierepo = movierepo;
         this.genrerepo = genrerepo;
+        this.movieTransactions = movietransactions;
     }
 
 
@@ -73,11 +76,8 @@ public class MVC {
         double rating = Double.parseDouble(s_rating);
 
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentPrincipal = (User) authentication.getPrincipal();
-        String username = currentPrincipal.getUsername();
+        movieTransactions.addRating(movieid, rating);
 
-        movierepo.addFeedbackRelationship(username, movieid, rating);
     }
 
     @GetMapping("/movie")
