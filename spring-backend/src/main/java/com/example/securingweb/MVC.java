@@ -88,7 +88,7 @@ public class MVC {
         // need to extract the rating by taking an average over all the users.
         // Long myid = new Long(movieid);
         // Optional<Movie> optional_movie = movierepo.findById(myid);
-        Movie movie = movierepo.findByMovieid(movieid);
+        Movie movie = movierepo.matchByMovieId(movieid);
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
         System.out.println(name);
@@ -225,7 +225,7 @@ public class MVC {
         Map<String, Long> id_name = new HashMap<>();
 
         for(Long movieid: movies_needed){
-            Movie movie = movierepo.findByMovieid(movieid);
+            Movie movie = movierepo.matchByMovieId(movieid);
             //System.out.println(movie.getName());
             String moviename=movie.getName();
             id_name.put(moviename, movieid);
