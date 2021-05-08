@@ -51,7 +51,7 @@ export default class MyNavbar extends Component {
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Search" className="search-input" value={this.state.query} onChange={this.onQueryChange} />
-                    <Link to={{ pathname: "/movie-search", state: {query: this.state.query} }}>Search</Link>
+                    <Link onClick={() => window.location.reload()} to={{ pathname: "/movie-search", state: {query: this.state.query} }}>Search</Link>
                 </Form>
                 {/* <Form inline> */}
                 {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}

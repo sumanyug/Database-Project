@@ -25,7 +25,6 @@ class UserService {
         });
     }
     sendRequest(username){
-        console.log(username);
         return axios.post(API_URL + 'addrequest?username=' + username,
         {},
          { headers: authHeader() }
