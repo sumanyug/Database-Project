@@ -48,7 +48,7 @@ public class RecommendationController {
         List<RecommendationVO> result = new LinkedList<>();
 
         for (Recommendation<Node> recommendation : recommendations) {
-            result.add(new RecommendationVO(recommendation.getUuid(), recommendation.getItem().getProperty("name", "unknown").toString(), recommendation.getScore()));
+            result.add(new RecommendationVO(recommendation.getItem().getProperty("id", "unknown").toString(), recommendation.getItem().getProperty("name", "unknown").toString(), recommendation.getScore()));
         }
 
         return result;

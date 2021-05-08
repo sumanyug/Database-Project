@@ -14,20 +14,31 @@ import org.springframework.security.core.GrantedAuthority;
 
 @Node ("Movie")
 public class Movie {
+    @Relationship(type="HAS_GENRE", direction= Relationship.Direction.OUTGOING)
+    Set<Genre> genres;
 
     @Id
     @GeneratedValue
-    private long movieid;
+    private Long id;
+
+    private Long movieid;
 
     private String name;
 
-    private double rating;
+    private Double rating;
 
     private Movie(){}
 
     public Movie(String name){
+        this.movieid = null;
         this.name = name;
         this.rating = 0.0;
+    }
+    public Movie(String name, Set<Genre> genres){
+        this.movieid = null;
+        this.name = name;
+        this.rating = 0.0;
+        this.genres = genres;
     }
     
     /*@Override
@@ -54,12 +65,20 @@ public class Movie {
         return name;
     }
 
-    public double getRating(){
+    public Double getRating(){
         return rating;
     }
 
-    public long getMovieID(){
+    public Long getId(){
         return movieid;
+    }
+
+    public Long getKey(){
+        return id;
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
     }
 
     /*@Override

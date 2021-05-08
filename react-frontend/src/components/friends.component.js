@@ -7,7 +7,7 @@ import AuthService from "../services/auth.service";
 import MyNavbar from "./navbar.component";
 import { Link } from "react-router-dom";
 
-function FriendList(props) {
+function PersonList(props) {
     const friends = props.friends;
     const listItems = friends.map((friend) =>
         <li key={friend}>
@@ -16,7 +16,7 @@ function FriendList(props) {
     );
     return (
         <div>
-            <h4>My Friends</h4>
+            <h4>{props.title}</h4>
             <ul>{listItems}</ul>
         </div>
     );
@@ -28,7 +28,8 @@ export default class Friends extends Component {
         
         this.state = {
             currentUser: AuthService.getCurrentUser(),
-            friends: []
+            friends: [],
+            requests: []
         }
         if(!this.state.currentUser){
             this.props.history.push('/login');
@@ -38,14 +39,20 @@ export default class Friends extends Component {
     componentDidMount() {
         UserService.getFriends().then(
             response => {
-                console.log(response);
                 this.setState({ friends: response.data });
-                console.log(this.state.friends);
             },
             error => {
                 console.log(error);
             }
         );
+        UserService.getRequests().then(
+            response => {
+                this.setState({ requests: response.data });
+            },
+            error => {
+                console.log(error);
+            }
+        )
     }
     render () {
         return ( 
@@ -54,7 +61,8 @@ export default class Friends extends Component {
                 <div className="center-text">
                     <NavLink to="friend-search">Search for friends</NavLink>
                 </div>
-                <FriendList friends={this.state.friends} />
+                <PersonList friends={this.state.friends} title="My Friends" />
+                <PersonList friends={this.state.requests} title="Pending Requests" />
             </div>
         )
     }

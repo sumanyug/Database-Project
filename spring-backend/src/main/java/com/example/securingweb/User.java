@@ -24,10 +24,10 @@ public class User  implements UserDetails{
 
     private String name;
 
-    private int age;
+    private Integer age;
     private String gender;
     private String occupation;
-    private int zipcode;
+    private Integer zipcode;
 
 
     private User(){}
@@ -37,10 +37,8 @@ public class User  implements UserDetails{
     @Relationship(type="FRIENDS_WITH", direction= Relationship.Direction.OUTGOING)
     Set<User> friends;
 
-
-
     public User(String username, String password, String name, Set<User> requests, Set<User> friends,
-                int age, String gender, String occupation, int zipcode){
+                Integer age, String gender, String occupation, Integer zipcode){
         this.username = username;
         if( this.username == null) this.username = "";
         this.password = password;
@@ -48,9 +46,9 @@ public class User  implements UserDetails{
         this.name = name;
         if( this.name == null) this.name = "";
         this.requests = requests;
-        if( this.requests == null) this.requests = new HashSet<>();
+        if( this.requests == null) this.requests = new TreeSet<>();
         this.friends = friends;
-        if( this.friends == null) this.friends = new HashSet<>();
+        if( this.friends == null) this.friends = new TreeSet<>();
         this.age = age;
         this.gender = gender;
         this.occupation = occupation;
@@ -81,9 +79,6 @@ public class User  implements UserDetails{
 
     public String getName(){
         return name;
-    }
-    public void setName(String name){
-        this.name = name;
     }
 
     @Override
@@ -116,6 +111,10 @@ public class User  implements UserDetails{
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name=" + name +
+                ",  age=" + age +
+                ", gender="+ gender +
+                ",  occupation="+occupation +
+                ", zipcode" + zipcode+
                 '}';
     }
     public Map<String,String> toMap(){
@@ -126,12 +125,28 @@ public class User  implements UserDetails{
     }
 
     public void AddFriendRequest(User frequest){
-        requests.add(frequest);
+        if(requests != null){
+            System.out.println("ABOUT TO ADD SOMETHING");
+            requests.add(frequest);
+        }
+        else
+        {
+            System.out.println("REACHED HERE for AddRequests");
+            requests = new TreeSet<>();
+            requests.add(frequest);
+        }
 
     }
 
     public void AddFriend(User frequest){
-        friends.add(frequest);
+        if(friends != null)
+            friends.add(frequest);
+        else
+        {
+            System.out.println("REACHED HERE for AddFriends");
+            friends = new TreeSet<>();
+            friends.add(frequest);
+        }
 
     }
 
@@ -149,9 +164,9 @@ public class User  implements UserDetails{
     public void removeFriend(User user){
         friends.remove(user);
     }
-
-    public int getAge(){return age;}
-    public void setAge(int age){
+// 
+    public Integer getAge(){return age;}
+    public void setAge(Integer age){
         this.age = age;
 
     }
@@ -173,12 +188,15 @@ public class User  implements UserDetails{
         this.occupation = occupation;
     }
 
-    public int getZipcode(){
+    public Integer getZipcode(){
         return zipcode;
     }
 
-    public void setZipcode(int zipcode){
+    public void setZipcode(Integer zipcode){
         this.zipcode = zipcode;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
 }

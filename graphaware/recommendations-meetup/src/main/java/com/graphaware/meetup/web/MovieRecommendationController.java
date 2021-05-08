@@ -3,6 +3,7 @@ package com.graphaware.meetup.web;
 import com.graphaware.meetup.MyRecommendationEngine;
 import com.graphaware.meetup.MovieRecommendationEngine;
 import com.graphaware.meetup.HomeRecommendationEngine;
+import com.graphaware.meetup.TrendingRecommendationEngine;
 import com.graphaware.reco.generic.config.SimpleConfig;
 import com.graphaware.reco.generic.engine.TopLevelRecommendationEngine;
 import com.graphaware.reco.generic.result.Recommendation;
@@ -25,6 +26,7 @@ public class MovieRecommendationController {
 
     private TopLevelRecommendationEngine<Node, Node> engine = new MovieRecommendationEngine();
     private TopLevelRecommendationEngine<Node, Node> home_engine = new HomeRecommendationEngine();
+    private TopLevelRecommendationEngine<Node, Node> trending_engine = new TrendingRecommendationEngine();
 
 
     @Autowired
@@ -45,7 +47,7 @@ public class MovieRecommendationController {
     @ResponseBody
     public List<RecommendationVO> recommend_trending(@PathVariable String username, @RequestParam(defaultValue = "10") int limit) {
         try (Transaction tx = database.beginTx()) {
-            return convert(home_engine.recommend(findByUsername(username), new SimpleConfig(limit)));
+            return convert(trending_engine.recommend(findByUsername(username), new SimpleConfig(limit)));
         }
     }
 
@@ -72,7 +74,7 @@ public class MovieRecommendationController {
         List<RecommendationVO> result = new LinkedList<>();
 
         for (Recommendation<Node> recommendation : recommendations) {
-            result.add(new RecommendationVO(recommendation.getUuid(), recommendation.getItem().getProperty("title", "unknown").toString(), recommendation.getScore()));
+            result.add(new RecommendationVO(recommendation.getItem().getProperty("movieid", "unknown").toString(), recommendation.getItem().getProperty("name", "unknown").toString(), recommendation.getScore()));
         }
 
         return result;

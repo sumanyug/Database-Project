@@ -1,10 +1,16 @@
 package com.example.securingweb;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,16 +31,19 @@ public class MVC {
 
     private UserRepository userrep;
     private UserTransactions usert;
+    private MovieTransactions movieTransactions;
 
 
     @Autowired
-    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert, MovieRepository movierepo, GenreRepository genrerepo){
+    public MVC(UDetService det, PasswordEncoder passwordEncoder, UserRepository userrep, UserTransactions usert,
+               MovieRepository movierepo, GenreRepository genrerepo, MovieTransactions movietransactions){
         this.det = det;
         this.passwordEncoder = passwordEncoder;
         this.userrep = userrep;
         this.usert = usert;
         this.movierepo = movierepo;
         this.genrerepo = genrerepo;
+        this.movieTransactions = movietransactions;
     }
 
 
@@ -60,41 +69,46 @@ public class MVC {
 
     @PostMapping(path = "/feedback", consumes = "application/json", produces = "application/json")
     public void addFeedbackRelationship(@RequestBody Map<String, Object> data){
-        String s_movieid = (String) data.get("movieid");
-        String s_rating = (String) data.get("rating");
+        String s_movieid = String.valueOf(data.get("movieid"));
+        String s_rating = String.valueOf(data.get("rating"));
 
         long movieid = Long.parseLong(s_movieid);
         double rating = Double.parseDouble(s_rating);
 
-        //System.out.println(movieid+" "+rating);
+        Date date = new Date();
+        long diff = date.getTime();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentPrincipal = (User) authentication.getPrincipal();
-        String username = currentPrincipal.getUsername();
+        movieTransactions.addRating(movieid, rating, diff);
 
-        movierepo.addFeedbackRelationship(username, movieid, rating);
     }
 
     @GetMapping("/movie")
     public Map<String, Object> movie(@RequestParam long movieid){
-
+        
         Map<String, Object> response = new HashMap<>();
-
         // need to extract the rating by taking an average over all the users.
-        Movie movie = movierepo.findByMovieid(movieid);
+        // Long myid = new Long(movieid);
+        // Optional<Movie> optional_movie = movierepo.findById(myid);
+        Movie movie = movierepo.matchByMovieId(movieid);
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
         boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
         boolean is_liked = movierepo.checkIfLiked(movieid, username);
 
-        response.put("movieid", movieid);
+        double user_rating=0.0;
+
+        if(movierepo.checkIfRatingExists(movieid, username))
+            user_rating = movierepo.getRating(username, movieid);
+
+        response.put("id", movieid);
         response.put("moviename", name);
         response.put("avg_rating", avg_rating);
+        response.put("user_rating", user_rating);
         response.put("in_watchlist", in_watchlist);
         response.put("is_liked", is_liked);
 
@@ -140,17 +154,24 @@ public class MVC {
 
     @PostMapping(path = "/admin")
     public void addMovie(@RequestBody Map<String, Object> body){
+
         String name = (String) body.get("name");
-        String a_rating = (String) body.get("avg_rating");
+        
+        String a_rating = String.valueOf(body.get("avg_rating"));
 
         double avg_rating = Double.parseDouble(a_rating);
 
         Movie movie = new Movie(name);
-        movierepo.save(movie);
+        movie = movierepo.save(movie);
 
-        long movieid = movie.getMovieID();
+        Long movieid = movie.getKey();
+        System.out.println(movieid);
 
-        movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
+        movierepo.setMovieID(movieid);
+
+        Date date = new Date();
+        long diff = date.getTime();
+        movierepo.addFeedbackRelationship("admin", movieid, avg_rating, diff); //adds a relationship from the admin to the movie 
 
         //movierepo.addMovie(name, avg_rating);
     }
@@ -182,49 +203,83 @@ public class MVC {
     }
 
     @GetMapping("/bootstrap")
-    public Map<String, List<Movie> > sendGenres() {
+    public List<Genre> sendGenres() {
         Map<String, List<Movie> > response = new HashMap<>();
 
         //System.out.println("hi1");
         List<Genre> Genres = genrerepo.findAllGenres();
         //System.out.println("hi2");
-
-        for(Genre genre: Genres){
-            String name = genre.getName();
-            //System.out.println(name);
-            List<Movie> movies = genrerepo.findTop5(name);
-            response.put(name, movies);
-        }
-
-        return response;
+        // List<String> GenreNames = new ArrayList<String>();
+        // for(Genre genre: Genres){
+            // String name = genre.getName();
+            // GenreNames.add(name);
+            // System.out.println(name);
+            // List<Movie> movies = genrerepo.findTop5(name);
+            // response.put(name, movies);
+        // }
+        return Genres;
     }
 
-    @PostMapping("/bootstrap")
-    public String receivemovies(@RequestBody Map <String, Object> data){
+    @GetMapping("/genremovies")
+    public Map<String,Long> getGenreMovies(@RequestParam String genrename){
+        List<Long> movies_needed = genrerepo.findTop5(genrename);
+        //System.out.println(movies_needed);
 
+        Map<String, Long> id_name = new HashMap<>();
+
+        for(Long movieid: movies_needed){
+            Movie movie = movierepo.matchByMovieId(movieid);
+            //System.out.println(movie.getName());
+            String moviename=movie.getName();
+            id_name.put(moviename, movieid);
+        }
+
+        //System.out.println(id_name);
+
+        return id_name;
+    }
+
+    // @PostMapping("/bootstrap")
+    // public String receivemovies(@RequestBody Map <String, Object> data){
+// 
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // User currentPrincipal = (User) authentication.getPrincipal();
+        // String username = currentPrincipal.getUsername();
+// 
+        // for (String name : data.keySet()){
+            // System.out.println("key: " + name);
+            // no use of key, just adding for the sake of it.
+        // }
+// 
+        // for (Object name : data.values()){
+            // for (String s_movieid : (List<String>) name){
+                // System.out.println(movie);
+                // long movieid = Long.parseLong(s_movieid);
+                // if(movierepo.checkIfRatingExists(movieid, username))
+                    // movierepo.setRating(username, movieid, 5.0);
+                // else
+                    // movierepo.addFeedbackRelationship(username, movieid, 5.0);
+            // }
+        // }
+// 
+        // return "started";
+    // }
+
+    @PostMapping("/bootstrap")
+    public void addMovies (@RequestParam long movieid){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        for (String name : data.keySet()){
-            //System.out.println("key: " + name);
-            // no use of key, just adding for the sake of it.
-        }
+        Date date = new Date();
+        long diff = date.getTime();
 
-        for (Object name : data.values()){
-            for (String s_movieid : (List<String>) name){
-                //System.out.println(movie);
-                long movieid = Long.parseLong(s_movieid);
-                if(movierepo.checkIfRatingExists(movieid, username))
-                    movierepo.setRating(username, movieid, 5.0);
-                else
-                    movierepo.addFeedbackRelationship(username, movieid, 5.0);
-            }
-        }
+        if(movierepo.checkIfRatingExists(movieid, username))
+            movierepo.updateFeedbackRelationship(username, movieid, 5.0, diff);
+        else
+            movierepo.addFeedbackRelationship(username, movieid, 5.0, diff);
 
-        return "started";
     }
-
 
     @GetMapping("/friend")
 //    @Transactional
@@ -252,8 +307,6 @@ public class MVC {
                 personFound.toString();
 
                 state = usert.personStatus(primaryUser.getUsername(), personFound.getUsername());
-                System.out.println("Status of rohan");
-                System.out.println(state);
                 response.putAll(personFound.toMap());
                 response.put("state", state);
             }
@@ -271,8 +324,6 @@ public class MVC {
     }
     @PostMapping("/addrequest")
     public Map<String, Object> addRequest(@RequestParam String username){
-        System.out.println("REQUEST SENT TO");
-        System.out.println(username);
         return usert.addRequest(username);
 
     }
@@ -285,7 +336,6 @@ public class MVC {
 
     @PostMapping("/deleterequest") // To delete a received request
     public Map<String, Object> deleteRequest(@RequestParam String username){
-        System.out.println("DELETING REQUEST");
         return usert.deleteRequest(username);
 
     }
@@ -330,6 +380,15 @@ public class MVC {
         return userrep.findAllRequests(primaryUser.getUsername());
     }
 
+    @PostMapping("/deleteUser")
+    public String deleteUser(){
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        userrep.deleteOneByUsername(primaryUser.getUsername());
+        return "Deleted";
+
+    }
+
 
 
 
@@ -341,7 +400,60 @@ public class MVC {
 
     }
 
+    @GetMapping("/homereco")
+    public String homeRecommendations() throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/" + primaryUser.getUsername();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+         System.out.println(response.body());
+        return response.body();
+    }
+
+    @GetMapping("/moviereco")
+    public String movieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+         System.out.println(response.body());
+        return response.body();
+    }
 
 
+    @GetMapping("/trendingreco")
+    public String trendingMovieRecommendations() throws IOException, InterruptedException {
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+        HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/"+primaryUser.getUsername()+"/trending";
+        System.out.println(uri);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+         System.out.println(response.body());
+        return response.body();
+    }
+
+    @GetMapping("/delete")
+    public void deleteAccount(){
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
+
+        String username = primaryUser.getUsername();
+
+        userrep.delete(username);
+    }
 
 }

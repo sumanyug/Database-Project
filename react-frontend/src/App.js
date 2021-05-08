@@ -14,7 +14,11 @@ import FriendSearch from "./components/friend-search.component";
 import Watchlist from "./components/watchlist.component";
 import Movie from "./components/movie.component";
 import Admin from "./components/admin.component";
-
+import MovieSearch from "./components/movie-search.component";
+import WatchNow from "./components/watchnow.component";
+import MovieBootstrap from "./components/movie-bootstrap.component";
+import GenreBootstrap from "./components/genre-bootstrap.component";
+import Delete from "./components/delete.component";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -49,11 +53,16 @@ class App extends Component {
           <Route exact path="/getstarted" component={GetStarted} />
           <Route exact path="/friends" component={Friends} />
           <Route exact path="/logout" component={Logout} />
+          <Route exact path="/delete" component={Delete} />
           <Route exact path="/friend-search" component={FriendSearch} />
           <Route exact path="/watchlist" component={Watchlist} />
           <Route exact path="/admin" component={Admin} />
+          <Route exact path="/movie-search" component={MovieSearch} />
+          <Route exact path="/bootstrap" component={GenreBootstrap} />
+          <Route path="/bootstrap/:id" component={MovieBootstrap} />
           <Route path = "/person/:id" component={Person} />
           <Route path ="/movie/:id" component={Movie} />
+          <Route path ="/watch/:id" component={WatchNow} />
         </Switch>
       </div>
     )

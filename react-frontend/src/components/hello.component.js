@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
 
+import HomeReco from "./home-reco.component";
+import TrendingReco from "./trending-reco.component";
 import MyNavbar from "./navbar.component";
 
 export default class Hello extends Component {
@@ -41,9 +43,8 @@ export default class Hello extends Component {
         return (
             <div className="container">
                 <MyNavbar />
-                <header className="jumbotron">
-                    <h3>{this.state.content}</h3>
-                </header>
+                { <HomeReco /> }
+                { <TrendingReco />}
             </div>
         )
     }

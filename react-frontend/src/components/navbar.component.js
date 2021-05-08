@@ -5,6 +5,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav'
 import { Form, FormControl, Button } from 'react-bootstrap';
 
+import { Router, Link } from "react-router-dom";
+
 export default class MyNavbar extends Component {
     constructor(props) {
         super(props);
@@ -21,7 +23,11 @@ export default class MyNavbar extends Component {
     }
 
     handleSearch(event) {
-        console.log("hi");
+        let query = this.state.query;
+        this.props.history.push({
+            pathname: "/movie-search",
+            state: { query: query}
+        });
     }
     render() {
         return (
@@ -34,6 +40,7 @@ export default class MyNavbar extends Component {
                 <Nav.Link href="/friends">Friends</Nav.Link>
                 <Nav.Link href="/watchlist">Watchlist</Nav.Link>
                 <Nav.Link href="/logout">Logout</Nav.Link>
+                <Nav.Link href="/delete">Delete Account</Nav.Link>
                 {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown"> */}
                     {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item> */}
                     {/* <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item> */}
@@ -44,7 +51,7 @@ export default class MyNavbar extends Component {
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Search" className="search-input" value={this.state.query} onChange={this.onQueryChange} />
-                    <Button variant="outline-success" onClick={this.handleSearch}>Search</Button>
+                    <Link onClick={() => window.location.reload()} to={{ pathname: "/movie-search", state: {query: this.state.query} }}>Search</Link>
                 </Form>
                 {/* <Form inline> */}
                 {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}

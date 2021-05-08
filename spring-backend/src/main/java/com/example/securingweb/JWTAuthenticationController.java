@@ -3,6 +3,7 @@ package com.example.securingweb;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -56,15 +57,20 @@ public class JWTAuthenticationController {
         System.out.println(user.getAge() + "\n" + user.getGender() + "\n" + user.getOccupation() +"\n"+ user.getZipcode());
         if(user.getName()== null)
             user.setName("");
-        if(user.getAge() == 0)
+        if(user.getAge() == null)
             user.setAge(-1);
         if(user.getGender() == null)
             user.setGender("O");
         if(user.getOccupation() == null)
             user.setOccupation("None");
-        if(user.getZipcode()== 0)
+        if(user.getZipcode()== null)
             user.setZipcode(0);
-        udetservice.createUser(user);
+        try {
+            udetservice.createUser(user);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(user);
     }
 
@@ -72,9 +78,10 @@ public class JWTAuthenticationController {
     private void authenticate(String username, String password) throws Exception{
         try{
             authMan.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        }catch(RuntimeException e){
-            System.out.println(e.getClass().getName());
-            System.out.println(e.getMessage());
+        }catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 

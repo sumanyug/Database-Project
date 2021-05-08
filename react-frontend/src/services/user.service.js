@@ -25,7 +25,6 @@ class UserService {
         });
     }
     sendRequest(username){
-        console.log(username);
         return axios.post(API_URL + 'addrequest?username=' + username,
         {},
          { headers: authHeader() }
@@ -73,16 +72,55 @@ class UserService {
     searchFriend(query){
         return axios.get(API_URL + 'searchPeople?searchQuery=' + query, { headers: authHeader() });
     }
+    searchMovie(query){
+        return axios.get(API_URL + "searchmovie?searchQuery=" + query, { headers: authHeader() });
+    }
     getWatchlist(){
         return axios.get(API_URL + 'watchlist', { headers: authHeader() });
     }
     getMovie(movie){
-        return axios.get(API_URL + 'movie?movie_name=' + movie, { 
+        console.log(movie);
+        return axios.get(API_URL + 'movie?movieid=' + movie, { 
             headers: authHeader() 
         });
     }
     getFriends(){
         return axios.get(API_URL + 'myfriends', { headers: authHeader() });
+    }
+    getRequests(){
+        return axios.get(API_URL + 'myrequests', { headers: authHeader() });
+    }
+    toggleWatchlist(movie) {
+        return axios.post(API_URL + 'movie?movieid=' + movie, {}, { headers: authHeader() } );
+    }
+    giveFeedback(movieid, rating) {
+        return axios.post(API_URL + 'feedback', { 
+            movieid: movieid,
+            rating: rating
+        }, { headers: authHeader() }
+        );
+    }
+    getBootstrap() {
+        return axios.get(API_URL + "bootstrap", { headers: authHeader() });
+    }
+    getGenreMovies(genre_name){
+        return axios.get(API_URL + "genremovies?genrename=" + genre_name, { headers: authHeader() });
+    }
+    bootstrapMovie(movie){
+        return axios.post(API_URL + "bootstrap?movieid="+movie, {}, { headers: authHeader() });
+    }
+    getHomeReco(){
+        return axios.get(API_URL + "homereco", { headers: authHeader() });
+    }
+    getTrendingReco(){
+        return axios.get(API_URL + "trendingreco", { headers: authHeader() });;
+    }
+    getMovieReco(movieid){
+        return axios.get(API_URL + "moviereco?movieid=" + movieid, { headers: authHeader() } );
+    }
+    delete(){
+        axios.post(API_URL + "deleteUser", {}, { headers: authHeader() });
+        localStorage.removeItem("user");
     }
 }
 

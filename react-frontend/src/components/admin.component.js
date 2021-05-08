@@ -80,7 +80,7 @@ export default class Admin extends Component {
                             <label>Average Rating</label>
                         </div>
                         <div className="input-div">
-                            <input type="number" step="0.1" min="0" max="5" value={this.state.rating} onChange={this.onRatingChange} />
+                            <input type="number" step="0.1" min="1" max="5" value={this.state.rating} onChange={this.onRatingChange} />
                         </div>
                         <div className="submit-div">
                             <input type="submit" value="Submit" />
