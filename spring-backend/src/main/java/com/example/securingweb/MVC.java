@@ -405,7 +405,7 @@ public class MVC {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
-        String uri = "http://localhost:7474/graphaware/home/1";
+        String uri = "http://localhost:7474/graphaware/home/" + primaryUser.getUsername();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .build();
