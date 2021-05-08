@@ -47,6 +47,9 @@ export default class GenreBootstrap extends Component {
                 Choose a few genres that you like
                 </div>
                 < GenreList genres={this.state.genres} />
+                <div className="center-text">
+                    <Link to="/hello">Done</Link>
+                </div>
             </div>
         )
     }

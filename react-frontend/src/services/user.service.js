@@ -107,6 +107,9 @@ class UserService {
     getGenreMovies(genre_name){
         return axios.get(API_URL + "genremovies?genrename=" + genre_name, { headers: authHeader() });
     }
+    bootstrapMovie(movie){
+        return axios.post(API_URL + "bootstrap?movieid="+movie, {}, { headers: authHeader() });
+    }
 }
 
 export default new UserService();

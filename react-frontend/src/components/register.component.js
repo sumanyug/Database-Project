@@ -104,7 +104,7 @@ export default class Register extends Component {
             message: response.data.message,
             successful: true
           });
-          this.props.history.push('/getstarted');
+
         },
         error => {
           const resMessage =
@@ -120,6 +120,12 @@ export default class Register extends Component {
           });
         }
       );
+      AuthService.login(
+        this.state.username,
+        this.state.password
+      )
+      this.props.history.push('/getstarted');
+
     }
   }
 

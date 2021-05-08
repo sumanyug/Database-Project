@@ -215,32 +215,44 @@ public class MVC {
         return movies_needed;
     }
 
-    @PostMapping("/bootstrap")
-    public String receivemovies(@RequestBody Map <String, Object> data){
+    // @PostMapping("/bootstrap")
+    // public String receivemovies(@RequestBody Map <String, Object> data){
+// 
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // User currentPrincipal = (User) authentication.getPrincipal();
+        // String username = currentPrincipal.getUsername();
+// 
+        // for (String name : data.keySet()){
+            // System.out.println("key: " + name);
+            // no use of key, just adding for the sake of it.
+        // }
+// 
+        // for (Object name : data.values()){
+            // for (String s_movieid : (List<String>) name){
+                // System.out.println(movie);
+                // long movieid = Long.parseLong(s_movieid);
+                // if(movierepo.checkIfRatingExists(movieid, username))
+                    // movierepo.setRating(username, movieid, 5.0);
+                // else
+                    // movierepo.addFeedbackRelationship(username, movieid, 5.0);
+            // }
+        // }
+// 
+        // return "started";
+    // }
 
+    @PostMapping("/bootstrap")
+    public void addMovies (@RequestParam long movieid){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        for (String name : data.keySet()){
-            //System.out.println("key: " + name);
-            // no use of key, just adding for the sake of it.
-        }
+        if(movierepo.checkIfRatingExists(movieid, username))
+            movierepo.setRating(username, movieid, 5.0);
+        else
+            movierepo.addFeedbackRelationship(username, movieid, 5.0);
 
-        for (Object name : data.values()){
-            for (String s_movieid : (List<String>) name){
-                //System.out.println(movie);
-                long movieid = Long.parseLong(s_movieid);
-                if(movierepo.checkIfRatingExists(movieid, username))
-                    movierepo.setRating(username, movieid, 5.0);
-                else
-                    movierepo.addFeedbackRelationship(username, movieid, 5.0);
-            }
-        }
-
-        return "started";
     }
-
 
     @GetMapping("/friend")
 //    @Transactional
@@ -367,7 +379,7 @@ public class MVC {
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/1"++ primaryUser.getUsername()))
+                .uri(URI.create("http://localhost:7474/graphaware/home/1" + primaryUser.getUsername()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

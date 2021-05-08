@@ -24,10 +24,10 @@ public class User  implements UserDetails{
 
     private String name;
 
-    // private int age;
-    // private String gender;
-    // private String occupation;
-    // private int zipcode;
+    private Integer age;
+    private String gender;
+    private String occupation;
+    private Integer zipcode;
 
 
     private User(){}
@@ -37,10 +37,8 @@ public class User  implements UserDetails{
     @Relationship(type="FRIENDS_WITH", direction= Relationship.Direction.OUTGOING)
     Set<User> friends;
 
-
-
-    public User(String username, String password, String name){//, Set<User> requests, Set<User> friends){
-               //, int age, String gender, String occupation, int zipcode){
+    public User(String username, String password, String name, Set<User> requests, Set<User> friends,
+                Integer age, String gender, String occupation, Integer zipcode){
         this.username = username;
         if( this.username == null) this.username = "";
         this.password = password;
@@ -51,12 +49,12 @@ public class User  implements UserDetails{
         if( this.requests == null) this.requests = new HashSet<>();
         this.friends = friends;
         if( this.friends == null) this.friends = new HashSet<>();
-        // this.age = age;
-        // this.gender = gender;
-        // this.occupation = occupation;
-        // this.zipcode = zipcode;
-        // if(this.gender == null) this.gender = "B";
-        // if(this.occupation== null) this.occupation = "";
+        this.age = age;
+        this.gender = gender;
+        this.occupation = occupation;
+        this.zipcode = zipcode;
+        if(this.gender == null) this.gender = "B";
+        if(this.occupation== null) this.occupation = "";
     }
     
     @Override
@@ -81,9 +79,6 @@ public class User  implements UserDetails{
 
     public String getName(){
         return name;
-    }
-    public void setName(String name){
-        this.name = name;
     }
 
     @Override
@@ -149,36 +144,39 @@ public class User  implements UserDetails{
     public void removeFriend(User user){
         friends.remove(user);
     }
+// 
+    public Integer getAge(){return age;}
+    public void setAge(Integer age){
+        this.age = age;
 
-    // public int getAge(){return age;}
-    // public void setAge(int age){
-        // this.age = age;
-// 
-    // }
-    // public String getGender(){
-        // return gender;
-    // }
-// 
-    // public void setGender(String gender){
-        // if(gender != null)
-        // if(gender.equals("M") || gender.equals("F")){
-            // this.gender = gender;
-        // }
-    // }
-// 
-    // public String getOccupation(){
-        // return occupation;
-    // }
-    // public void setOccupation(String occupation){
-        // this.occupation = occupation;
-    // }
-// 
-    // public int getZipcode(){
-        // return zipcode;
-    // }
-// 
-    // public void setZipcode(int zipcode){
-        // this.zipcode = zipcode;
-    // }
-// 
+    }
+    public String getGender(){
+        return gender;
+    }
+
+    public void setGender(String gender){
+        if(gender != null)
+        if(gender.equals("M") || gender.equals("F")){
+            this.gender = gender;
+        }
+    }
+
+    public String getOccupation(){
+        return occupation;
+    }
+    public void setOccupation(String occupation){
+        this.occupation = occupation;
+    }
+
+    public Integer getZipcode(){
+        return zipcode;
+    }
+
+    public void setZipcode(Integer zipcode){
+        this.zipcode = zipcode;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
 }
