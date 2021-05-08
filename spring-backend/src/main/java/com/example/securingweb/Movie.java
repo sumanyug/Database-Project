@@ -19,6 +19,8 @@ public class Movie {
 
     @Id
     @GeneratedValue
+    private Long id;
+
     private Long movieid;
 
     private String name;
@@ -69,6 +71,10 @@ public class Movie {
 
     public Long getId(){
         return movieid;
+    }
+
+    public Long getKey(){
+        return id;
     }
 
     public Set<Genre> getGenres() {
