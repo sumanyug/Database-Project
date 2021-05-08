@@ -84,21 +84,21 @@ public class MVC {
     public Map<String, Object> movie(@RequestParam long movieid){
         
         Map<String, Object> response = new HashMap<>();
-
+        System.out.println(movieid);
         // need to extract the rating by taking an average over all the users.
-        Long myid = new Long(movieid);
-        Optional<Movie> optional_movie = movierepo.findById(myid);
-        Movie movie = optional_movie.get();
+        // Long myid = new Long(movieid);
+        // Optional<Movie> optional_movie = movierepo.findById(myid);
+        Movie movie = movierepo.findByMovieid(movieid);
         String name = movie.getName();
         double avg_rating = movierepo.getAvgRating(movieid);
-
+        System.out.println(name);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
-        boolean in_watchlist = movierepo.checkInWatchlist(myid, username);
-        boolean is_liked = movierepo.checkIfLiked(myid, username);
+        boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
+        boolean is_liked = movierepo.checkIfLiked(movieid, username);
 
         double user_rating=0.0;
 
@@ -405,7 +405,7 @@ public class MVC {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // System.out.println(response.body());
-        return "[{\"uuid\": \"32\", \"item\": \"f\", \"score\" :{\"totalScore\":\"5.0\"} }]";
+        return response.body();
     }
 
     @GetMapping("/moviereco")
@@ -418,7 +418,7 @@ public class MVC {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
+        // System.out.println(response.body());
         return response.body();
     }
 
@@ -433,7 +433,7 @@ public class MVC {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
+        // System.out.println(response.body());
         return response.body();
     }
 

@@ -6,6 +6,7 @@ import AuthService from "../services/auth.service";
 import Card from "react-bootstrap/Card";
 
 import MyNavbar from "./navbar.component";
+import MovieReco from "./movie-reco.component";
 
 import { Link } from "react-router-dom";
 
@@ -78,6 +79,7 @@ export default class Movie extends Component {
         let rating = this.state.rating;
         let inWatchlist = this.state.inWatchlist;
         let isLiked = this.state.isLiked;
+        let id = this.state.id;
         return (
             <div>
                 < MyNavbar />
@@ -94,6 +96,7 @@ export default class Movie extends Component {
                     </Card.Body>
                 </Card>
                 </div>
+                {/* <MovieReco title={title} id={id}/> */}
             </div>
         )
     }

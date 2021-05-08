@@ -116,8 +116,8 @@ class UserService {
     getTrendingReco(){
         return axios.get(API_URL + "trendingreco", { headers: authHeader() });;
     }
-    getMovieReco(){
-        return axios.get(API_URL + "moviereco", { headers: authHeader() } );
+    getMovieReco(movieid){
+        return axios.get(API_URL + "moviereco?movieid=" + movieid, { headers: authHeader() } );
     }
 }
 
