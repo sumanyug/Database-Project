@@ -53,9 +53,7 @@ public class UserTransactions {
                 String username2 = personFound.getUsername();
                 if (userRepository.checkRequest(username2, username1) != null &&
                 userRepository.checkFriend(username1, username2) == null) {
-                    primaryUser.AddFriend(personFound);
-                    userRepository.deleteFriendRequest(username2, username1);
-                    userRepository.save(primaryUser);
+                    userRepository.addFriend(username1, username2);
                     added = true;
                 }
                 response.putAll(personFound.toMap());
@@ -73,6 +71,7 @@ public class UserTransactions {
     public Map<String, Object> addRequest(String username){
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
+        System.out.println(primaryUser.toString());
 
         Map<String, Object> response = new HashMap<>();
         List<User> userList = userRepository.findOneByUsername(username);
@@ -82,13 +81,14 @@ public class UserTransactions {
         else{
             if(userList.size() == 1){
                 User personFound = userList.get(0);
+                System.out.println(personFound.toString());
+
                 boolean added = false;
                 String username1 = primaryUser.getUsername();
                 String username2 = personFound.getUsername();
                 if (userRepository.checkRequest(username2, username1) == null &&
                         userRepository.checkFriend(username1, username2) == null) {
-                    primaryUser.AddFriendRequest(personFound);
-                    userRepository.save(primaryUser);
+                    userRepository.addFriend(username1, username2);
                     added = true;
                 }
                 response.putAll(personFound.toMap());

@@ -46,9 +46,9 @@ public class User  implements UserDetails{
         this.name = name;
         if( this.name == null) this.name = "";
         this.requests = requests;
-        if( this.requests == null) this.requests = new HashSet<>();
+        if( this.requests == null) this.requests = new TreeSet<>();
         this.friends = friends;
-        if( this.friends == null) this.friends = new HashSet<>();
+        if( this.friends == null) this.friends = new TreeSet<>();
         this.age = age;
         this.gender = gender;
         this.occupation = occupation;
@@ -111,6 +111,10 @@ public class User  implements UserDetails{
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name=" + name +
+                ",  age=" + age +
+                ", gender="+ gender +
+                ",  occupation="+occupation +
+                ", zipcode" + zipcode+
                 '}';
     }
     public Map<String,String> toMap(){
@@ -121,12 +125,28 @@ public class User  implements UserDetails{
     }
 
     public void AddFriendRequest(User frequest){
-        requests.add(frequest);
+        if(requests != null){
+            System.out.println("ABOUT TO ADD SOMETHING");
+            requests.add(frequest);
+        }
+        else
+        {
+            System.out.println("REACHED HERE for AddRequests");
+            requests = new TreeSet<>();
+            requests.add(frequest);
+        }
 
     }
 
     public void AddFriend(User frequest){
-        friends.add(frequest);
+        if(friends != null)
+            friends.add(frequest);
+        else
+        {
+            System.out.println("REACHED HERE for AddFriends");
+            friends = new TreeSet<>();
+            friends.add(frequest);
+        }
 
     }
 
