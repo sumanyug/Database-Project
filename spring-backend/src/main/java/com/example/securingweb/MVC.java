@@ -400,12 +400,13 @@ public class MVC {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/1";
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/"+primaryUser.getUsername()))
+                .uri(URI.create(uri))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // System.out.println(response.body());
+         System.out.println(response.body());
         return response.body();
     }
 
@@ -414,27 +415,29 @@ public class MVC {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/" + primaryUser.getUsername() + "/movie/"+movieid))
+                .uri(URI.create(uri))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // System.out.println(response.body());
+         System.out.println(response.body());
         return response.body();
     }
 
 
     @GetMapping("/trendingreco")
-    public String trendingMovieRecommendations(@RequestParam int movieid) throws IOException, InterruptedException {
+    public String trendingMovieRecommendations() throws IOException, InterruptedException {
         Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User primaryUser = (User)ob;
         HttpClient client = HttpClient.newHttpClient();
+        String uri = "http://localhost:7474/graphaware/home/"+primaryUser.getUsername()+"/trending";
+        System.out.println(uri);
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:7474/graphaware/home/1/trending"))
+                .uri(URI.create(uri))
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // System.out.println(response.body());
+         System.out.println(response.body());
         return response.body();
     }
 

@@ -1,8 +1,9 @@
 package com.example.securingweb;
 import java.util.List;
 import java.util.Optional; 
-import org.springframework.beans.factory.annotation.Autowired; 
-import org.springframework.security.core.userdetails.UserDetails; 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService; 
 import org.springframework.security.core.userdetails.UsernameNotFoundException; 
 import org.springframework.security.provisioning.UserDetailsManager; 
@@ -48,7 +49,25 @@ public class UDetService implements UserDetailsService{
         return user;
     }
 
-    public void createUser(User user) { 
+    public void createUser(User user) throws Exception {
+        List<User> users = userrepo.findOneByUsername(user.getUsername());
+        User u;
+        if(users == null){
+            u = null;
+        }
+        else{
+            if(users.size() == 0){
+                u = null;
+            }
+            else{
+                u = users.get(0);
+            }
+        }
+        if (u != null){
+            {
+                throw new Exception("ALREADY EXISTS USER");
+            }
+        }
         user.setPassword(brcyptEncoder.encode(user.getPassword()));
         userrepo.save((User) user); 
     }
