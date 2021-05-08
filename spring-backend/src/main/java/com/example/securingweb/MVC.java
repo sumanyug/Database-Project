@@ -97,6 +97,7 @@ public class MVC {
         User currentPrincipal = (User) authentication.getPrincipal();
         String username = currentPrincipal.getUsername();
 
+        System.out.println(username);
         boolean in_watchlist = movierepo.checkInWatchlist(movieid, username);
         boolean is_liked = movierepo.checkIfLiked(movieid, username);
 

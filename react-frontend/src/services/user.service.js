@@ -119,6 +119,10 @@ class UserService {
     getMovieReco(movieid){
         return axios.get(API_URL + "moviereco?movieid=" + movieid, { headers: authHeader() } );
     }
+    delete(){
+        axios.post(API_URL + "deleteUser", {}, { headers: authHeader() });
+        localStorage.removeItem("user");
+    }
 }
 
 export default new UserService();

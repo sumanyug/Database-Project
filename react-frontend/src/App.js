@@ -18,7 +18,7 @@ import MovieSearch from "./components/movie-search.component";
 import WatchNow from "./components/watchnow.component";
 import MovieBootstrap from "./components/movie-bootstrap.component";
 import GenreBootstrap from "./components/genre-bootstrap.component";
-
+import Delete from "./components/delete.component";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +53,7 @@ class App extends Component {
           <Route exact path="/getstarted" component={GetStarted} />
           <Route exact path="/friends" component={Friends} />
           <Route exact path="/logout" component={Logout} />
+          <Route exact path="/delete" component={Delete} />
           <Route exact path="/friend-search" component={FriendSearch} />
           <Route exact path="/watchlist" component={Watchlist} />
           <Route exact path="/admin" component={Admin} />

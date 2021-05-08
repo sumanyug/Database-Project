@@ -55,8 +55,6 @@ export default class Login extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            console.log(this.state.password);
-            console.log(this.state.username);
             AuthService.login(this.state.username, this.state.password).then(
                 () => {
                     //console.log(this.state.password);
