@@ -72,7 +72,7 @@ public class MovieRecommendationController {
         List<RecommendationVO> result = new LinkedList<>();
 
         for (Recommendation<Node> recommendation : recommendations) {
-            result.add(new RecommendationVO(recommendation.getUuid(), recommendation.getItem().getProperty("title", "unknown").toString(), recommendation.getScore()));
+            result.add(new RecommendationVO(recommendation.getUuid(), recommendation.getItem().getProperty("name", "unknown").toString(), recommendation.getScore()));
         }
 
         return result;
