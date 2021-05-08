@@ -55,6 +55,8 @@ export default class Login extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
+            console.log(this.state.password);
+            console.log(this.state.username);
             AuthService.login(this.state.username, this.state.password).then(
                 () => {
                     //console.log(this.state.password);
@@ -134,7 +136,7 @@ export default class Login extends Component {
                 {this.state.message && (
                   <div className="form-group">
                     <div className="alert alert-danger" role="alert">
-                      {this.state.message}
+                      Invalid Username/Password. Please try again.
                     </div>
                   </div>
                 )}

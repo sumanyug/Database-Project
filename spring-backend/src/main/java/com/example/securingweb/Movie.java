@@ -17,7 +17,7 @@ public class Movie {
 
     @Id
     @GeneratedValue
-    private long movieid;
+    private Long movieid;
 
     private String name;
 
@@ -26,6 +26,7 @@ public class Movie {
     private Movie(){}
 
     public Movie(String name){
+        this.movieid = null;
         this.name = name;
         this.rating = 0.0;
     }
@@ -58,7 +59,7 @@ public class Movie {
         return rating;
     }
 
-    public long getMovieID(){
+    public Long getId(){
         return movieid;
     }
 

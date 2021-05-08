@@ -52,3 +52,9 @@
 .submit-div{
   text-align:center;
 }
+
+.center-card{
+  margin: auto;
+  text-align: center;
+  width: 50%;
+}
