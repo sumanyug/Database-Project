@@ -100,9 +100,15 @@ public class MVC {
         boolean in_watchlist = movierepo.checkInWatchlist(myid, username);
         boolean is_liked = movierepo.checkIfLiked(myid, username);
 
+        double user_rating=0.0;
+
+        if(movierepo.checkIfRatingExists(movieid, username))
+            user_rating = movierepo.getRating(username, movieid);
+
         response.put("id", movieid);
         response.put("moviename", name);
         response.put("avg_rating", avg_rating);
+        response.put("user_rating", user_rating);
         response.put("in_watchlist", in_watchlist);
         response.put("is_liked", is_liked);
 
@@ -156,10 +162,12 @@ public class MVC {
         double avg_rating = Double.parseDouble(a_rating);
 
         Movie movie = new Movie(name);
-        movierepo.save(movie);
+        movie = movierepo.save(movie);
 
-        Long movieid = movie.getId();
+        Long movieid = movie.getKey();
         System.out.println(movieid);
+
+        movierepo.setMovieID(movieid);
         movierepo.addFeedbackRelationship("admin", movieid, avg_rating); //adds a relationship from the admin to the movie 
 
         //movierepo.addMovie(name, avg_rating);
@@ -210,9 +218,22 @@ public class MVC {
     }
 
     @GetMapping("/genremovies")
-    public List<Movie> getGenreMovies(@RequestParam String genrename){
-        List<Movie> movies_needed = genrerepo.findTop5(genrename);
-        return movies_needed;
+    public Map<String,Long> getGenreMovies(@RequestParam String genrename){
+        List<Long> movies_needed = genrerepo.findTop5(genrename);
+        //System.out.println(movies_needed);
+
+        Map<String, Long> id_name = new HashMap<>();
+
+        for(Long movieid: movies_needed){
+            Movie movie = movierepo.findByMovieid(movieid);
+            //System.out.println(movie.getName());
+            String moviename=movie.getName();
+            id_name.put(moviename, movieid);
+        }
+
+        //System.out.println(id_name);
+
+        return id_name;
     }
 
     // @PostMapping("/bootstrap")
@@ -416,6 +437,14 @@ public class MVC {
         return response.body();
     }
 
+    @GetMapping("/delete")
+    public void deleteAccount(){
+        Object ob = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User primaryUser = (User)ob;
 
+        String username = primaryUser.getUsername();
+
+        userrep.delete(username);
+    }
 
 }

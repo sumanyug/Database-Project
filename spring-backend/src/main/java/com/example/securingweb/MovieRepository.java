@@ -7,9 +7,10 @@ import org.springframework.data.neo4j.repository.query.Query;
 
 public interface MovieRepository extends Neo4jRepository <Movie, Long>{
     Movie findByName(String name);
+    Movie findByMovieid(Long movieid);
 
     // @Query("MATCH (n:Movie) WHERE id(n) = $movieid RETURN n")
-    Optional<Movie> findById(Long movieid);
+    // Optional<Movie> findById(Long movieid);
 
     @Query("MATCH (n:Movie)<-[:WATCH_LIST]-(u:User) WHERE u.username = $username RETURN n")
     List<Movie> findAllMoviesForUsername(String username);
@@ -42,6 +43,9 @@ public interface MovieRepository extends Neo4jRepository <Movie, Long>{
     @Query("MATCH (m:Movie {movieid: $movieid})<-[r:HAS_RATED]-(u:User {username: $username}) SET r.rating=$rating")
     void setRating(String username, Long movieid, double rating);
 
+    @Query("MATCH (m:Movie {movieid: $movieid})<-[r:HAS_RATED]-(u:User {username: $username}) RETURN r.rating")
+    double getRating(String username, Long movieid);
+
     @Query("MATCH (m:Movie)<-[r:HAS_RATED]-(u:User) WHERE id(m) = $movieid RETURN coalesce(avg(r.rating),0.0)")
     double getAvgRating(Long movieid);
 
@@ -53,4 +57,7 @@ public interface MovieRepository extends Neo4jRepository <Movie, Long>{
 
     //@Query("MATCH (n:Movie), (u:User) WHERE n.name = $moviename and u.username = $username CREATE (u)-[r:LIKED]->(n)")
     //void like(String username, String moviename);
+
+    @Query("MATCH (m:Movie) where ID(m)=$movieid SET m.movieid=$movieid")
+    void setMovieID(Long movieid);
 }

@@ -13,6 +13,6 @@ public interface GenreRepository extends Neo4jRepository <Genre, Integer>{
     @Query("MATCH (g:Genre) RETURN g")
     List<Genre> findAllGenres();
 
-    @Query("MATCH (g:Genre)<-[:HAS_GENRE]-(m:Movie) WHERE g.name = $genre RETURN m ORDER BY m.rating DESC LIMIT 5")
-    List<Movie> findTop5(String genre);
+    @Query("MATCH (g:Genre)<-[:HAS_GENRE]-(m:Movie) WHERE g.name = $genre RETURN m.movieid ORDER BY m.rating DESC LIMIT 5")
+    List<Long> findTop5(String genre);
 }

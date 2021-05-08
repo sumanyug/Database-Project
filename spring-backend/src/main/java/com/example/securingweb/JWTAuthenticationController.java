@@ -72,10 +72,10 @@ public class JWTAuthenticationController {
     private void authenticate(String username, String password) throws Exception{
         try{
             authMan.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        }catch(RuntimeException e){
-            System.out.println("Right here");
-            System.out.println(e.getClass().getName());
-            System.out.println(e.getMessage());
+        }catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
 
